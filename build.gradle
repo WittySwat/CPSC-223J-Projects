@@ -12,7 +12,12 @@ buildscript {
 apply plugin: "io.freefair.aggregate-javadoc"
 
 group 'jburges'
-version '1.0-SNAPSHOT'
+version 'JavaDoc-' + getDate()
+
+def getDate() {
+    return new Date().format('yyyy-MM-dd')
+}
+
 
 apply plugin:'java'
 
