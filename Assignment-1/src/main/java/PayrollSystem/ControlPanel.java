@@ -1,4 +1,4 @@
-/*
+package PayrollSystem;/*
  *  Program Name: "Payroll System".  This program shows how to add and subtract two numbers using a simple UI with three
  *  active buttons.  Copyright (C) 2021 Jarrod Burges
  *  This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
@@ -7,8 +7,6 @@
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  *  A copy of the GNU General Public License v3 is available here:  <https://www.gnu.org/licenses/>.
  */
-
-package jburges;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,18 +19,18 @@ import java.awt.event.ActionListener;
  */
 public class ControlPanel extends JPanel {
     /**
-     * Represents an InputPanel to gather input variables to be used by
+     * Represents an jburges.InputPanel to gather input variables to be used by
      * {@link ControlPanel#computeButtonListener()} math done by
      * {@link MathHelper}
      */
     private final InputPanel inputPanel;
     /**
-     * Represents an OutputPanel to display output variables computed by {@link ControlPanel#computeButtonListener()}
+     * Represents an jburges.OutputPanel to display output variables computed by {@link ControlPanel#computeButtonListener()}
      */
     private final OutputPanel outputPanel;
 
     /**
-     * Creates a ControlPanel with specified {@link InputPanel} and {@link OutputPanel}.
+     * Creates a jburges.ControlPanel with specified {@link InputPanel} and {@link OutputPanel}.
      * @param inputPanel {@link InputPanel} to be used to get input variables
      * @param outputPanel {@link OutputPanel} to be used to display output variables
      */
@@ -77,8 +75,8 @@ public class ControlPanel extends JPanel {
 
     /**
      * Returns a new ActionListener with an override of actionPerformed event that upon evoked will
-     * clear all JTextFields and JFormattedTextFields within an InputPanel. As well as clearing all
-     * JLabels found within an OutputPanel. InputPanel and OutPanel then are redrawn.
+     * clear all JTextFields and JFormattedTextFields within an jburges.InputPanel. As well as clearing all
+     * JLabels found within an jburges.OutputPanel. jburges.InputPanel and OutPanel then are redrawn.
      *
      * @return ActionListener
      * @see InputPanel
@@ -86,7 +84,7 @@ public class ControlPanel extends JPanel {
      */
     private ActionListener clearButtonListener() {
         return actionEvent -> {
-            //Resets every InputPanel JTextField or JFormattedTextField to either black text or 0.0d
+            //Resets every jburges.InputPanel JTextField or JFormattedTextField to either black text or 0.0d
             inputPanel.getEmployeeNameTextField().setText("");
             inputPanel.getHoursWorkedTextField().setValue(0.0d);
             inputPanel.getHourlyPayRateTextField().setValue(0.0d);
@@ -105,8 +103,8 @@ public class ControlPanel extends JPanel {
 
     /**
      * Returns a new ActionListener with an override of actionPerformed event that upon evoked will
-     * gather the variables from an InputPanel's JFormattedTextField and JTextField and pass them to {@link MathHelper} to compute.
-     * Those are then sent to an OutputPanel's JLabel and displayed. InputPanel and OutPanel then are redrawn.
+     * gather the variables from an jburges.InputPanel's JFormattedTextField and JTextField and pass them to {@link MathHelper} to compute.
+     * Those are then sent to an jburges.OutputPanel's JLabel and displayed. jburges.InputPanel and OutPanel then are redrawn.
      *
      * @return ActionListener
      * @see InputPanel

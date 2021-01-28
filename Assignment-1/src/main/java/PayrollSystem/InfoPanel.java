@@ -1,4 +1,4 @@
-/*
+package PayrollSystem;/*
  *  Program Name: "Payroll System".  This program shows how to add and subtract two numbers using a simple UI with three
  *  active buttons.  Copyright (C) 2021 Jarrod Burges
  *  This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
@@ -7,8 +7,6 @@
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  *  A copy of the GNU General Public License v3 is available here:  <https://www.gnu.org/licenses/>.
  */
-
-package jburges;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +18,7 @@ import java.awt.*;
  */
 public class InfoPanel extends JPanel {
     /**
-     * Creates an InfoPanel with the given companyName and authorName.
+     * Creates an jburges.InfoPanel with the given companyName and authorName.
      *
      * @param companyName Name of the company using this Payroll Application
      * @param authorName Name of the creator of this Payroll Application

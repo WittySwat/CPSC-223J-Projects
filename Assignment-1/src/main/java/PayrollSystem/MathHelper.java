@@ -1,4 +1,4 @@
-/*
+package PayrollSystem;/*
  *  Program Name: "Payroll System".  This program shows how to add and subtract two numbers using a simple UI with three
  *  active buttons.  Copyright (C) 2021 Jarrod Burges
  *  This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
@@ -8,7 +8,6 @@
  *  A copy of the GNU General Public License v3 is available here:  <https://www.gnu.org/licenses/>.
  */
 
-package jburges;
 /**
  * Represents mathematical computational methods to be used within the Application.
  * @author Jarrod Burges

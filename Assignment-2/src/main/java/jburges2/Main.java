@@ -7,10 +7,8 @@
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
  *  A copy of the GNU General Public License v3 is available here:  <https://www.gnu.org/licenses/>.
  */
+package jburges2;
 
-package jburges;
-
-import javax.swing.*;
 /**
  * Represents the Applications main function
  * @author Jarrod Burges
@@ -18,10 +16,9 @@ import javax.swing.*;
  */
 public class Main {
     /**
-     * Creates an {@link ApplicationFrame} inside a Runnable() to be thread-safe.
+     * Creates an  inside a Runnable() to be thread-safe
      * @param args unused
      */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ApplicationFrame("Program 1"));
     }
 }

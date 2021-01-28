@@ -1,7 +1,14 @@
 /.idea/
 *.iml
 
+/.gradle/
+/gradlew
+/gradlew.bat
+/gradle/
 /*/gradle/
 /*/.gradle/
 /*/gradlew
 /*/gradlew.bat
+
+/build/
+/*/build/
