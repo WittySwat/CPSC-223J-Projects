@@ -19,6 +19,7 @@ import java.awt.*;
  * @email jburges@csu.fullerton.edu
  */
 public class InfoPanel extends JPanel {
+
     /**
      * Creates an jburges.InfoPanel with the given companyName and authorName.
      *

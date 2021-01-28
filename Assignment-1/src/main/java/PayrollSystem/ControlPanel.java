@@ -20,12 +20,14 @@ import java.awt.event.ActionListener;
  * @email jburges@csu.fullerton.edu
  */
 public class ControlPanel extends JPanel {
+
     /**
      * Represents an jburges.InputPanel to gather input variables to be used by
      * {@link ControlPanel#computeButtonListener()} math done by
      * {@link MathHelper}
      */
     private final InputPanel inputPanel;
+
     /**
      * Represents an jburges.OutputPanel to display output variables computed by {@link ControlPanel#computeButtonListener()}
      */

@@ -11,12 +11,14 @@
 package PayrollSystem;
 
 import javax.swing.*;
+
 /**
  * Represents the Applications main function
  * @author Jarrod Burges
  * @email jburges@csu.fullerton.edu
  */
 public class Main {
+
     /**
      * Creates an {@link ApplicationFrame} inside a Runnable() to be thread-safe.
      * @param args unused

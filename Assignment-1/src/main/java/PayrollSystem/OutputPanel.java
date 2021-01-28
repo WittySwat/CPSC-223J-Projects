@@ -25,7 +25,7 @@ public class OutputPanel extends JPanel {
     private JLabel grossPayLabel;
 
     /**
-     * Creates an jburges.OutputPanel with set size and colors. Contains four output labels to display computed information.
+     * Creates an OutputPanel with set size and colors. Contains four output labels to display computed information.
      */
     public OutputPanel() {
         //Calls super() and sets size constraints and color

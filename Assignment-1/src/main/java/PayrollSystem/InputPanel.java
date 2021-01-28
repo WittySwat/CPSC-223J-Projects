@@ -22,6 +22,7 @@ import java.text.NumberFormat;
  * @email jburges@csu.fullerton.edu
  */
 public class InputPanel extends JPanel {
+
     /**
      * Represents the input field for the employee name.
      */

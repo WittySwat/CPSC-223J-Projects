@@ -16,6 +16,7 @@ package PayrollSystem;
  * @email jburges@csu.fullerton.edu
  */
 public final class MathHelper {
+
     /**
      * Calculates regularPay which is hoursWorked * hourlyPay but up to hoursWorked <= 40.0.
      * Values of hoursWorked > 40.0 return hourlyPay * 40.0

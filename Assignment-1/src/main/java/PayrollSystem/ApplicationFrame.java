@@ -19,6 +19,7 @@ import java.awt.*;
  * @email jburges@csu.fullerton.edu
  */
 public class ApplicationFrame extends JFrame {
+
     /**
      * Creates the Application's main JFrame by adding the JPanels {@link InfoPanel}, {@link InputPanel},
      * {@link OutputPanel}, {@link ControlPanel} to this Application's main JFrame.
