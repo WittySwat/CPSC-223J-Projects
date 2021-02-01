@@ -147,6 +147,6 @@ public class ControlPanel extends JPanel {
      * @return ActionListener
      */
     private ActionListener quitButtonListener() {
-        return actionEvent -> System.exit(1);
+        return actionEvent -> System.exit(0);
     }
 }
