@@ -26,7 +26,7 @@ public class ControlPanel extends JPanel {
 
     private final AnimationPanel animationPanel;
     private JFormattedTextField pixelSpeedInput;
-    private final NumberFormat doubleFormat = NumberFormat.getNumberInstance();
+    private final NumberFormat integerInstance = NumberFormat.getIntegerInstance();
 
     public ControlPanel(AnimationPanel animationPanel) {
         //Calls super() and sets size constraints, color, and border
@@ -55,8 +55,10 @@ public class ControlPanel extends JPanel {
 
         this.add(startButton, BorderLayout.WEST);
         this.add(speed, BorderLayout.CENTER);
-        pixelSpeedInput = new JFormattedTextField(doubleFormat);
-        pixelSpeedInput.setValue((double) 0);
+
+        pixelSpeedInput = new JFormattedTextField(integerInstance);
+        pixelSpeedInput.setValue((int) 0);
+
         this.add(pixelSpeedInput, BorderLayout.CENTER);
         this.add(quitButton, BorderLayout.EAST);
     }
@@ -64,7 +66,7 @@ public class ControlPanel extends JPanel {
     private ActionListener startButtonListener() {
         return actionEvent -> {
             try {
-                animationPanel.animateToNextPoint();
+                animationPanel.animateToNextPoint(((Number)pixelSpeedInput.getValue()).intValue());
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -16,32 +16,23 @@ package DiamondAnimation;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class AnimationPanel extends JPanel {
-    // Define constants for the various dimensions
     public static final int CANVAS_WIDTH = 500;
     public static final int CANVAS_HEIGHT = 500;
     public static final Color CANVAS_BG_COLOR = Color.CYAN;
+    private int unitsPerSecond = 0;
 
     private final int[] xPoints = {250, 450, 250, 50};
     private final int[] yPoints = {50, 250, 450, 250};
 
     private int current = 0;
 
-
     private final GameField gameField;
-    private Player player;
-
-    public Player getPlayer() {
-        return player;
-    }
-
-    public GameField getGameField() {
-        return gameField;
-    }
+    private final Player player;
+    private Timer timer;
 
     public AnimationPanel() {
         player = new Player(xPoints[0], yPoints[0], 20);
@@ -57,34 +48,38 @@ public class AnimationPanel extends JPanel {
         requestFocus();
     }
 
-    private void move200(int pos) throws InterruptedException {
-        for (int i = 0; i < 200; i++) {
+    private void moveToNextPoint(int pos, int delay) {
+        final int[] numTimes = {0};
+        timer = new Timer(delay, e -> {
+            if (numTimes[0] == 200)
+                timer.stop();
             switch (pos) {
                 case 0:
-                player.plot(player.x + 1, player.y + 1);
-                this.paintImmediately(0, 0, 500, 500);
-            break;
-            case 1:
-                player.plot(player.x - 1, player.y + 1);
-                this.paintImmediately(0, 0, 500, 500);
-                break;
-            case 2:
-                player.plot(player.x - 1, player.y - 1);
-                this.paintImmediately(0, 0, 500, 500);
-                break;
-            case 3:
-                player.plot(player.x + 1, player.y - 1);
-                this.paintImmediately(0, 0, 500, 500);
-                break;
-            default:
-                break;
+                    player.plot(player.x + 1, player.y + 1);
+                    gameField.paintImmediately(0, 0, 500, 500);
+                    break;
+                case 1:
+                    player.plot(player.x - 1, player.y + 1);
+                    gameField.paintImmediately(0, 0, 500, 500);
+                    break;
+                case 2:
+                    player.plot(player.x - 1, player.y - 1);
+                    gameField.paintImmediately(0, 0, 500, 500);
+                    break;
+                case 3:
+                    player.plot(player.x + 1, player.y - 1);
+                    gameField.paintImmediately(0, 0, 500, 500);
+                    break;
+                default:
+                    break;
             }
-            Thread.sleep(10);
-        }
+            numTimes[0]++;
+        });
     }
 
-    public void animateToNextPoint() throws InterruptedException {
-        move200(current % 4);
+    public void animateToNextPoint(int delay) throws InterruptedException {
+        moveToNextPoint(current % 4, 5);
+        timer.start();
         current++;
     }
 
@@ -95,6 +90,7 @@ public class AnimationPanel extends JPanel {
 
             Graphics2D g2d = (Graphics2D) g;
             g2d.setColor(new Color(255, 0, 0));
+            //rescales and translates g2d to have (0,0) orgin at bottom left rather than top left
             g2d.scale(1, -1);
             g2d.translate(0, -getHeight());
 
