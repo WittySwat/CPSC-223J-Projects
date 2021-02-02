@@ -1,1 +1,0 @@
-typeSearchIndex = [{"l":"All Classes","url":"allclasses-index.html"},{"p":"PayrollSystem","l":"ApplicationFrame"},{"p":"PayrollSystem","l":"ControlPanel"},{"p":"PayrollSystem","l":"InfoPanel"},{"p":"PayrollSystem","l":"InputPanel"},{"p":"PayrollSystem","l":"Main"},{"p":"jburges2","l":"Main"},{"p":"PayrollSystem","l":"MathHelper"},{"p":"PayrollSystem","l":"OutputPanel"}]
