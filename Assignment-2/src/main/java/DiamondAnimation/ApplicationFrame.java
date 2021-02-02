@@ -59,7 +59,6 @@ public class ApplicationFrame extends JFrame {
         mainPanel.add(infoPanel);
         AnimationPanel animationPanel = new AnimationPanel();
         mainPanel.add(animationPanel);
-        //mainPanel.add(animationPanel2);
         mainPanel.add(new ControlPanel(animationPanel));
     }
 }
