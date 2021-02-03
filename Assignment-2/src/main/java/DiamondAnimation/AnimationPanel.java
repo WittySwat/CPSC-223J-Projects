@@ -14,16 +14,17 @@
 
 package DiamondAnimation;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
+import java.awt.image.VolatileImage;
+import java.io.IOException;
 
 public class AnimationPanel extends JPanel {
     public static final int CANVAS_WIDTH = 500;
     public static final int CANVAS_HEIGHT = 500;
     public static final Color CANVAS_BG_COLOR = Color.CYAN;
-    private int unitsPerSecond = 0;
 
     private final int[] xPoints = {250, 450, 250, 50};
     private final int[] yPoints = {50, 250, 450, 250};
@@ -48,12 +49,26 @@ public class AnimationPanel extends JPanel {
         requestFocus();
     }
 
-    private void moveToNextPoint(int pos, int delay) {
-        final int[] numTimes = {0};
+    public void moveAcrossDiamond(int delay) {
+        synchronized (this) {
+            if (timer != null) {
+                return;
+            }
+        }
+
+        final int[] numTimes = {0, 0};
         timer = new Timer(delay, e -> {
-            if (numTimes[0] == 200)
+            if (numTimes[1] > 3) {
                 timer.stop();
-            switch (pos) {
+                synchronized (AnimationPanel.this) {
+                    timer = null;
+                }
+            }
+            if (numTimes[0] == 200) {
+                numTimes[1]++;
+                numTimes[0] -= 200;
+            }
+            switch (numTimes[1]) {
                 case 0:
                     player.plot(player.x + 1, player.y + 1);
                     gameField.paintImmediately(0, 0, 500, 500);
@@ -75,32 +90,32 @@ public class AnimationPanel extends JPanel {
             }
             numTimes[0]++;
         });
-    }
-
-    public void animateToNextPoint(int delay) throws InterruptedException {
-        moveToNextPoint(current % 4, 5);
         timer.start();
         current++;
     }
 
+
     class GameField extends JPanel {
+        BufferedImage fieldImage;
+        public GameField() {
+            try {
+                fieldImage = ImageIO.read(getClass().getResourceAsStream("/field.png"));
+            } catch (IllegalArgumentException | IOException e) {
+                fieldImage = null;
+            }
+        }
+
         @Override
         public void paintComponent(Graphics g) {
             super.paintComponent(g);
-
             Graphics2D g2d = (Graphics2D) g;
-            g2d.setColor(new Color(255, 0, 0));
+
             //rescales and translates g2d to have (0,0) orgin at bottom left rather than top left
             g2d.scale(1, -1);
             g2d.translate(0, -getHeight());
 
-            g2d.drawLine(0, 0, 500, 500);
-            g2d.drawLine(0, 500, 500, 0);
-
-            int numPoints = 4;
-            g2d.drawPolygon(xPoints, yPoints, numPoints);
-
-            setBackground(CANVAS_BG_COLOR);
+            if (fieldImage != null)
+                g2d.drawImage(fieldImage, 0, 0, null);
 
             player.paint(g);
         }
@@ -111,15 +126,25 @@ class Player {
     int x;
     int y;
     double radius;
+    BufferedImage playerImage;
 
     public Player(int x, int y, int radius) {
         this.x = x;
         this.y = y;
         this.radius = radius;
+
+        try {
+            playerImage = ImageIO.read(getClass().getResourceAsStream("/player.png"));
+        } catch (IllegalArgumentException | IOException e) {
+            playerImage = null;
+        }
     }
 
     public void paint(Graphics g) {
-        g.fillOval(x, y, (int) radius, (int) radius);
+        if (playerImage != null)
+            g.drawImage(playerImage, (int) (x - (radius)), (int) (y - (radius)), null);
+        else
+            g.fillOval((int) (x - (radius/2)), (int) (y - (radius/2)), 20, 20);
     }
 
     public void plot(int x, int y) {

@@ -65,11 +65,7 @@ public class ControlPanel extends JPanel {
 
     private ActionListener startButtonListener() {
         return actionEvent -> {
-            try {
-                animationPanel.animateToNextPoint(((Number)pixelSpeedInput.getValue()).intValue());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            animationPanel.moveAcrossDiamond(((Number)pixelSpeedInput.getValue()).intValue());
         };
     }
 
