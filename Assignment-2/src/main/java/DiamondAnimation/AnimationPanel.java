@@ -25,7 +25,6 @@ import java.io.IOException;
  * @email jburges@csu.fullerton.edu
  */
 public class AnimationPanel extends JPanel {
-
     /**
      * Represents the main panel GameField that the player can be see in
      */
@@ -37,18 +36,19 @@ public class AnimationPanel extends JPanel {
     private final Player player;
 
     /**
-     * Timer that controls the player's movement inside {@link AnimationPanel#moveAcrossDiamond(int delay)}
+     * Timer that controls the player's movement inside {@link AnimationPanel#moveAcrossDiamond(int, JButton)}
      */
-    private Timer timer;
+    private Timer timer = null;
 
     /**
      * Creates an DiamondAnimation.AnimationPanel with preset height and width equal to 500.
      */
     public AnimationPanel() {
-        player = new Player(250, 50, 20);
-
         gameField = new GameField();
         gameField.setPreferredSize(new Dimension(500, 500));
+
+        player = new Player(250, 50, gameField);
+
         this.setMaximumSize(new Dimension(500, 500));
 
         this.setLayout(new GridLayout());
@@ -65,66 +65,30 @@ public class AnimationPanel extends JPanel {
      *
      * @param delay time between each 1 unit increase of {@link Player}
      */
-    public void moveAcrossDiamond(int delay) {
-        //if timer isn't null, meaning a timer is currently running exit this function
+    public void moveAcrossDiamond(int delay, JButton button) {
         synchronized (this) {
             if (timer != null) {
-                return;
+                timer.stop();
+                timer = null;
+                button.setText("Start");
+            } else {
+                button.setText("Pause");
+                timer = new Timer(delay, e -> {
+                    if (player.getLastPos() > 3) {
+                        timer.stop();
+                        button.setText("Start");
+                        player.resetPos();
+
+                        synchronized (AnimationPanel.this) {
+                            timer = null;
+                        }
+                    }
+                    player.moveOneUnit();
+                    gameField.paintImmediately(0, 0, 500, 500);
+                });
+                timer.start();
             }
         }
-
-        final int[] numTimes = {0, 0};
-        timer = new Timer(delay, e -> {
-            //if numTimes[1] is > 3 means that player has gone to every point on the diamond and is back at start pos
-            //stop timer and set to null, meaning a new timer can not be run
-            if (numTimes[1] > 3) {
-                timer.stop();
-                synchronized (AnimationPanel.this) {
-                    timer = null;
-                }
-            }
-            //if numTimes[0] == 200 means that the player is now at the next point on the diamond.
-            if (numTimes[0] == 200) {
-                //move current point to the next one
-                numTimes[1]++;
-                //reset point counter
-                numTimes[0] -= 200;
-            }
-            //picks how to move the player based on which point the player is currently at
-            switch (numTimes[1]) {
-                //player at bottom
-                case 0:
-                    //moves the player from bottom to right by 1 unit on the diagonal
-                    player.plot(player.x + 1, player.y + 1);
-                    gameField.paintImmediately(0, 0, 500, 500);
-                    break;
-                //player at right
-                case 1:
-                    //moves the player from right to top by 1 unit on the diagonal
-                    player.plot(player.x - 1, player.y + 1);
-                    gameField.paintImmediately(0, 0, 500, 500);
-                    break;
-                //player at top
-                case 2:
-                    //moves the player from top to left by 1 unit on the diagonal
-                    player.plot(player.x - 1, player.y - 1);
-                    gameField.paintImmediately(0, 0, 500, 500);
-                    break;
-                //player at left
-                case 3:
-                    //moves the player from left to bottom by 1 unit on the diagonal, thus going back to start pos
-                    player.plot(player.x + 1, player.y - 1);
-                    gameField.paintImmediately(0, 0, 500, 500);
-                    break;
-                default:
-                    break;
-            }
-            //increases point controller by 1 meaning the player moved 1 unit closer to next point
-            //increases up to 200 where player is now at the next point, then reset back to 0
-            numTimes[0]++;
-        });
-        //starts the timer for the player to move across the diamond at the specified delay above
-        timer.start();
     }
 
     /**
@@ -179,21 +143,24 @@ public class AnimationPanel extends JPanel {
  * Represents the player that occupies a {@link AnimationPanel.GameField} and that can move across the diamond.
  */
 class Player {
-    int x;
-    int y;
-    double radius;
-    BufferedImage playerImage;
+    private int x;
+    private int y;
+    private final double radius = 20;
+    private BufferedImage playerImage;
+    private int lastPos = 0;
+    private int nextPos = 1;
+    private final int[] xPoints = {250, 450, 250, 50};
+    private final int[] yPoints = {450, 250, 50, 250};
+    private final AnimationPanel.GameField gameField;
 
     /**
-     *
-     * @param x x coordinate on the {@link AnimationPanel.GameField}
-     * @param y y coordinate on the {@link AnimationPanel.GameField}
-     * @param radius size of player only used if fancy player image can't load
+     * @param x      x coordinate on the {@link AnimationPanel.GameField}
+     * @param y      y coordinate on the {@link AnimationPanel.GameField}
      */
-    public Player(int x, int y, int radius) {
+    public Player(int x, int y, AnimationPanel.GameField gameField) {
         this.x = x;
         this.y = y;
-        this.radius = radius;
+        this.gameField = gameField;
 
         try {
             playerImage = ImageIO.read(getClass().getResourceAsStream("/player.png"));
@@ -211,7 +178,7 @@ class Player {
         if (playerImage != null)
             g.drawImage(playerImage, (int) (x - (radius)), (int) (y - (radius)), null);
         else
-            g.fillOval((int) (x - (radius/2)), (int) (y - (radius/2)), 20, 20);
+            g.fillOval((int) (x - (radius / 2)), (int) (y - (radius / 2)), 20, 20);
     }
 
     /**
@@ -225,4 +192,45 @@ class Player {
         this.x = x;
         this.y = y;
     }
+
+    public void moveOneUnit() {
+        int dx = 1;
+        int dy = -1;
+        if ((xPoints[nextPos%4] - xPoints[lastPos%4]) < 0)
+            dx = -1;
+        if ((yPoints[nextPos%4] - yPoints[lastPos%4]) < 0)
+            dy = 1;
+        x += dx;
+        y += dy;
+
+        if (x == 50 | x == 250 || x == 450) {
+            if (y == 50 | y == 250 || y == 450) {
+                lastPos++;
+                nextPos++;
+            }
+        }
+    }
+
+    public void moveToNextPoint() {
+        int numXUnits = Math.abs(xPoints[nextPos%4] - xPoints[lastPos%4]);
+        int numYUnits = Math.abs(yPoints[nextPos%4] - yPoints[lastPos%4]);
+        if (numXUnits != numYUnits)
+            System.out.println("Error: not on y=x line");
+        for (int i = 0; i < numXUnits; i++) {
+            moveOneUnit();
+            gameField.paintImmediately(0,0,500,500);
+        }
+        lastPos++;
+        nextPos++;
+    }
+
+    public void resetPos() {
+        nextPos = 1;
+        lastPos = 0;
+    }
+
+    public int getLastPos() {
+        return lastPos;
+    }
+
 }

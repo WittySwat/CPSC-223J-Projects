@@ -13,8 +13,8 @@ package DiamondAnimation;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.awt.geom.Line2D;
-import java.awt.geom.Point2D;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.NumberFormat;
 
 /**
@@ -27,6 +27,7 @@ public class ControlPanel extends JPanel {
     private final AnimationPanel animationPanel;
     private JFormattedTextField pixelSpeedInput;
     private final NumberFormat integerInstance = NumberFormat.getIntegerInstance();
+    private JButton startPauseButton;
 
     public ControlPanel(AnimationPanel animationPanel) {
         //Calls super() and sets size constraints, color, and border
@@ -36,37 +37,35 @@ public class ControlPanel extends JPanel {
         this.setPreferredSize(new Dimension(600, 50));
         this.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
 
-        //sets private class variables to constructor provided variables
-        //to be used by computeButton
-
         createAndAddButtons();
     }
 
 
     private void createAndAddButtons() {
-        JButton startButton = new JButton("Start");
+        startPauseButton = new JButton("Start");
         JButton quitButton = new JButton("Quit");
         JLabel speed = new JLabel("Speed");
         speed.setFont(new Font(Font.DIALOG, Font.BOLD,20));
 
         quitButton.setPreferredSize(new Dimension(25, 25));
         quitButton.addActionListener(quitButtonListener());
-        startButton.addActionListener(startButtonListener());
+        startPauseButton.addActionListener(startPauseButtonLisenter());
 
-        this.add(startButton, BorderLayout.WEST);
+        this.add(startPauseButton, BorderLayout.WEST);
         this.add(speed, BorderLayout.CENTER);
 
+        //todo maybe add the tiny ^v things to increment speedInput by 1
         pixelSpeedInput = new JFormattedTextField(integerInstance);
         pixelSpeedInput.setValue(0);
+        pixelSpeedInput.addMouseListener(clearFieldListener(pixelSpeedInput));
 
         this.add(pixelSpeedInput, BorderLayout.CENTER);
         this.add(quitButton, BorderLayout.EAST);
     }
 
-    //todo change this to have a pause function while moveAcrossDiamond is running
-    private ActionListener startButtonListener() {
+    private ActionListener startPauseButtonLisenter() {
         return actionEvent -> {
-            animationPanel.moveAcrossDiamond(((Number)pixelSpeedInput.getValue()).intValue());
+            animationPanel.moveAcrossDiamond(((Number)pixelSpeedInput.getValue()).intValue(), startPauseButton);
         };
     }
 
@@ -77,5 +76,20 @@ public class ControlPanel extends JPanel {
      */
     private ActionListener quitButtonListener() {
         return actionEvent -> System.exit(0);
+    }
+
+    /**
+     * Creates a listener that when the mouse is clicked it will clear the text inside it.
+     *
+     * @param field a {@link JFormattedTextField} object to add this listener to
+     * @return MouseAdapter mouseClicked listener to remove text inside text field
+     */
+    private MouseAdapter clearFieldListener(JFormattedTextField field) {
+        return new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e){
+                field.setText("");
+            }
+        };
     }
 }
