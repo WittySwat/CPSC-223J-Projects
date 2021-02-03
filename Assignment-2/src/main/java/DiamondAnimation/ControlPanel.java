@@ -1,5 +1,5 @@
 /*
- * Program Name: "Payroll System".  This program shows how to add and subtract two numbers using a simple UI with three
+ * Program Name: "Diamond Animation".  This program shows how to add and subtract two numbers using a simple UI with three
  * active buttons.  Copyright (C) 2021 Jarrod Burges
  * This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License
  * version 3 as published by the Free Software Foundation.
@@ -57,12 +57,13 @@ public class ControlPanel extends JPanel {
         this.add(speed, BorderLayout.CENTER);
 
         pixelSpeedInput = new JFormattedTextField(integerInstance);
-        pixelSpeedInput.setValue((int) 0);
+        pixelSpeedInput.setValue(0);
 
         this.add(pixelSpeedInput, BorderLayout.CENTER);
         this.add(quitButton, BorderLayout.EAST);
     }
 
+    //todo change this to have a pause function while moveAcrossDiamond is running
     private ActionListener startButtonListener() {
         return actionEvent -> {
             animationPanel.moveAcrossDiamond(((Number)pixelSpeedInput.getValue()).intValue());

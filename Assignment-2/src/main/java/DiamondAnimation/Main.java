@@ -9,15 +9,9 @@
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
  *  License for more details.
  *  A copy of the GNU General Public License v3 is available here:  <https://www.gnu.org/licenses/>.
- *
  */
 package DiamondAnimation;
 
-/**
- * Represents the Applications main function
- * @author Jarrod Burges
- * @email jburges@csu.fullerton.edu
- */
 import javax.swing.*;
 
 /**
@@ -32,11 +26,6 @@ public class Main {
      * @param args unused
      */
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new ApplicationFrame("Program 2");
-            }
-        });
+        SwingUtilities.invokeLater(() -> new ApplicationFrame("Program 2"));
     }
 }

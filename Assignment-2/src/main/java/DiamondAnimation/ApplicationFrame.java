@@ -24,8 +24,8 @@ import java.awt.*;
 public class ApplicationFrame extends JFrame {
 
     /**
-     * Creates the Application's main JFrame by adding the JPanels {@link InfoPanel},
-     * , {@link ControlPanel} to this Application's main JFrame.
+     * Creates the Application's main JFrame by adding the JPanels {@link AnimationPanel},
+     * {@link InfoPanel}, {@link ControlPanel} to this Application's main JFrame.
      *
      * @param title The main title of the entire Application JFrame
      * @throws HeadlessException missing display, keyboard, or mouse
@@ -49,15 +49,15 @@ public class ApplicationFrame extends JFrame {
     }
 
     /**
-     * Creates {@link InfoPanel},,
-     * @link jburges.OutputPanel}, {@link ControlPanel} and adds it to the mainPanel
+     * Creates {@link AnimationPanel}, {@link InfoPanel}, {@link ControlPanel}
+     * and adds it to the mainPanel.
      *
-     * @param mainPanel jburges.Main JPanel to be used to hold the other JPanels
+     * @param mainPanel panel to add the other panels too
      */
     private void createAndAddPanels(JPanel mainPanel) {
-        InfoPanel infoPanel = new InfoPanel("Diamond Animation", "Jarrod Burges");
-        mainPanel.add(infoPanel);
         AnimationPanel animationPanel = new AnimationPanel();
+
+        mainPanel.add(new InfoPanel("Diamond Animation", "Jarrod Burges"));
         mainPanel.add(animationPanel);
         mainPanel.add(new ControlPanel(animationPanel));
     }

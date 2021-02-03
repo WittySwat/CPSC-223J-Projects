@@ -9,7 +9,6 @@
  *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public
  *  License for more details.
  *  A copy of the GNU General Public License v3 is available here:  <https://www.gnu.org/licenses/>.
- *
  */
 
 /**
