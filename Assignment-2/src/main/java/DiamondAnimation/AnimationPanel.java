@@ -16,8 +16,10 @@ package DiamondAnimation;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Represents the main visual display of the {@link GameField} and {@link Player}
@@ -28,26 +30,29 @@ public class AnimationPanel extends JPanel {
     /**
      * Represents the main panel GameField that the player can be see in
      */
-    private final GameField gameField;
+    private GameField gameField;
 
     /**
      * Represents the only and main player on the {@link GameField}
      */
-    private final Player player;
+    private Player player;
 
     /**
      * Timer that controls the player's movement inside {@link AnimationPanel#moveAcrossDiamond(int, JButton)}
      */
     private Timer timer = null;
 
+    private int[] defaultXPoints = {250, 450, 250, 50};
+    private int[] defaultYPoints = {50, 250, 450, 250};
+    private Polygon defaultPolygon = new Polygon(defaultXPoints, defaultYPoints, 4);
+
     /**
      * Creates an DiamondAnimation.AnimationPanel with preset height and width equal to 500.
      */
     public AnimationPanel() {
-        gameField = new GameField();
+        gameField = new GameField(defaultPolygon);
         gameField.setPreferredSize(new Dimension(500, 500));
-
-        player = new Player(250, 50, gameField);
+        player = new Player(defaultPolygon.xpoints[0], defaultPolygon.ypoints[0], defaultPolygon, gameField);
 
         this.setMaximumSize(new Dimension(500, 500));
 
@@ -57,6 +62,27 @@ public class AnimationPanel extends JPanel {
         setVisible(true);
         requestFocus();
     }
+
+    public void changeToDefaultRhombusField() {
+        gameField = new GameField(defaultPolygon);
+        this.repaint(0,0,this.getWidth(),this.getHeight());
+    }
+
+    public void changeToRandomRhombusField() {
+        if (timer == null) {
+            Polygon randomRhombus = MathHelper.generateRandomRhombus();
+            gameField.polygon = randomRhombus;
+            player.setX(randomRhombus.xpoints[0]);
+            player.setY(randomRhombus.ypoints[0]);
+            player.setxPoints(randomRhombus.xpoints);
+            player.setyPoints(randomRhombus.ypoints);
+            player.reloadPoint2DSArray();
+            player.setGameField(gameField);
+
+            this.paintImmediately(0, 0, this.getWidth(), this.getHeight());
+        }
+    }
+
 
     /**
      * Moves {@link AnimationPanel#player} across every point on the {@link GameField}.
@@ -77,14 +103,13 @@ public class AnimationPanel extends JPanel {
                     if (player.getLastPos() > 3) {
                         timer.stop();
                         button.setText("Start");
-                        player.resetPos();
+                        player.reloadPoint2DSArray();
 
                         synchronized (AnimationPanel.this) {
                             timer = null;
                         }
                     }
-                    player.moveOneUnit();
-                    gameField.paintImmediately(0, 0, 500, 500);
+                    player.moveOneUnitUpdate();
                 });
                 timer.start();
             }
@@ -96,6 +121,7 @@ public class AnimationPanel extends JPanel {
      * exists in and moves around in.
      */
     class GameField extends JPanel {
+
         /**
          * Represents the background image of this object.
          */
@@ -105,7 +131,10 @@ public class AnimationPanel extends JPanel {
          * Creates the GameField object with a set field image. If the field image cannot load properly
          * the background defaults to plain green.
          */
-        public GameField() {
+
+        Polygon polygon;
+        public GameField(Polygon polygon) {
+            this.polygon = polygon;
             try {
                 fieldImage = ImageIO.read(getClass().getResourceAsStream("/field.png"));
             } catch (IllegalArgumentException | IOException e) {
@@ -133,8 +162,10 @@ public class AnimationPanel extends JPanel {
             //only draws the fancy field image if there wasn't errors with loading the image from file
             if (fieldImage != null)
                 g2d.drawImage(fieldImage, 0, 0, null);
-
-            player.paint(g);
+            g2d.drawPolygon(polygon);
+            player.paint(g2d);
+            g2d.dispose();
+            g.dispose();
         }
     }
 }
@@ -149,18 +180,28 @@ class Player {
     private BufferedImage playerImage;
     private int lastPos = 0;
     private int nextPos = 1;
-    private final int[] xPoints = {250, 450, 250, 50};
-    private final int[] yPoints = {450, 250, 50, 250};
-    private final AnimationPanel.GameField gameField;
-
+    private int[] xPoints;
+    private int[] yPoints;
+    private ArrayList<ArrayList<Point2D>> everyPoint2DS;
+    private int pos = 0;
+    private AnimationPanel.GameField gameField;
+    int test = 0;
     /**
      * @param x      x coordinate on the {@link AnimationPanel.GameField}
      * @param y      y coordinate on the {@link AnimationPanel.GameField}
      */
-    public Player(int x, int y, AnimationPanel.GameField gameField) {
+    public Player(int x, int y, Polygon polygon, AnimationPanel.GameField gameField) {
         this.x = x;
         this.y = y;
         this.gameField = gameField;
+        this.xPoints = polygon.xpoints;
+        this.yPoints = polygon.ypoints;
+
+        everyPoint2DS = new ArrayList<>(4);
+        everyPoint2DS.add(MathHelper.bresenham(xPoints[0], yPoints[0], xPoints[1], yPoints[1]));
+        everyPoint2DS.add(MathHelper.bresenham(xPoints[1], yPoints[1], xPoints[2], yPoints[2]));
+        everyPoint2DS.add(MathHelper.bresenham(xPoints[2], yPoints[2], xPoints[3], yPoints[3]));
+        everyPoint2DS.add(MathHelper.bresenham(xPoints[3], yPoints[3], xPoints[0], yPoints[0]));
 
         try {
             playerImage = ImageIO.read(getClass().getResourceAsStream("/player.png"));
@@ -172,65 +213,65 @@ class Player {
     /**
      * Paints the player at it's current coordinates centered on (x, y).
      *
-     * @param g Graphics object to paint to
+     * @param g2d Graphics object to paint to
      */
-    public void paint(Graphics g) {
+    public void paint(Graphics2D g2d) {
         if (playerImage != null)
-            g.drawImage(playerImage, (int) (x - (radius)), (int) (y - (radius)), null);
+            g2d.drawImage(playerImage, (int) (x - (radius)), (int) (y - (radius)), null);
         else
-            g.fillOval((int) (x - (radius / 2)), (int) (y - (radius / 2)), 20, 20);
+            g2d.fillOval((int) (x - (radius / 2)), (int) (y - (radius / 2)), 20, 20);
     }
 
-    /**
-     * Sets the player to the specified coordinate on the {@link AnimationPanel.GameField}.
-     * Requires a repaint on the GameField for changes to be seen in the UI.
-     *
-     * @param x x coordinate to change the player to on the {@link AnimationPanel.GameField}
-     * @param y y coordinate to change the player to on the {@link AnimationPanel.GameField}
-     */
-    public void plot(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public void moveOneUnit() {
-        int dx = 1;
-        int dy = -1;
-        if ((xPoints[nextPos%4] - xPoints[lastPos%4]) < 0)
-            dx = -1;
-        if ((yPoints[nextPos%4] - yPoints[lastPos%4]) < 0)
-            dy = 1;
-        x += dx;
-        y += dy;
-
-        if (x == 50 | x == 250 || x == 450) {
-            if (y == 50 | y == 250 || y == 450) {
-                lastPos++;
-                nextPos++;
-            }
-        }
-    }
-
-    public void moveToNextPoint() {
-        int numXUnits = Math.abs(xPoints[nextPos%4] - xPoints[lastPos%4]);
-        int numYUnits = Math.abs(yPoints[nextPos%4] - yPoints[lastPos%4]);
-        if (numXUnits != numYUnits)
-            System.out.println("Error: not on y=x line");
-        for (int i = 0; i < numXUnits; i++) {
-            moveOneUnit();
-            gameField.paintImmediately(0,0,500,500);
-        }
-        lastPos++;
-        nextPos++;
-    }
-
-    public void resetPos() {
-        nextPos = 1;
+    public void reloadPoint2DSArray() {
+        everyPoint2DS.clear();
+        everyPoint2DS.add(MathHelper.bresenham(xPoints[0], yPoints[0], xPoints[1], yPoints[1]));
+        everyPoint2DS.add(MathHelper.bresenham(xPoints[1], yPoints[1], xPoints[2], yPoints[2]));
+        everyPoint2DS.add(MathHelper.bresenham(xPoints[2], yPoints[2], xPoints[3], yPoints[3]));
+        everyPoint2DS.add(MathHelper.bresenham(xPoints[3], yPoints[3], xPoints[0], yPoints[0]));
+        pos = 0;
+        test = 0;
         lastPos = 0;
+        nextPos = 1;
+    }
+
+
+    public void moveOneUnitUpdate() {
+        if (pos == everyPoint2DS.get(test%4).size()) {
+            System.out.println("moved point" + x);
+            pos = 0;
+            test++;
+
+            lastPos++;
+            nextPos++;
+        }
+        gameField.paintImmediately(this.x, this.y,100,100);
+        this.x = (int) everyPoint2DS.get(test%4).get(pos).getX();
+        this.y = (int) everyPoint2DS.get(test%4).get(pos).getY();
+        pos++;
+        gameField.paintImmediately(0, 0,500,500);
     }
 
     public int getLastPos() {
         return lastPos;
     }
 
+    public void setX(int x) {
+        this.x = x;
+    }
+
+    public void setY(int y) {
+        this.y = y;
+    }
+
+    public void setxPoints(int[] xPoints) {
+        this.xPoints = xPoints;
+    }
+
+    public void setyPoints(int[] yPoints) {
+        this.yPoints = yPoints;
+    }
+
+    public void setGameField(AnimationPanel.GameField gameField) {
+        this.gameField = gameField;
+    }
 }

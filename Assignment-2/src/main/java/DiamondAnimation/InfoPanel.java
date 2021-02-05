@@ -29,7 +29,7 @@ public class InfoPanel extends JPanel {
     public InfoPanel(String programName, String authorName) {
         //Calls super() and sets size constraints and color
         super(new GridLayout(2, 1));
-        this.setPreferredSize(new Dimension(600, 50));
+        this.setPreferredSize(new Dimension(550, 50));
         this.setBackground(new Color(186,85,211));
 
         //Creates and adds Program Name Label

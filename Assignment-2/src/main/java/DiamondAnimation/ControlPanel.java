@@ -34,8 +34,8 @@ public class ControlPanel extends JPanel {
         super(new GridLayout(1, 4));
         this.animationPanel = animationPanel;
         this.setBackground(new Color(255, 105, 97));
-        this.setPreferredSize(new Dimension(600, 50));
-        this.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
+        this.setPreferredSize(new Dimension(550, 50));
+        this.setBorder(BorderFactory.createEmptyBorder(15,20,15,20));
 
         createAndAddButtons();
     }
@@ -46,18 +46,22 @@ public class ControlPanel extends JPanel {
         JButton quitButton = new JButton("Quit");
         JLabel speed = new JLabel("Speed");
         speed.setFont(new Font(Font.DIALOG, Font.BOLD,20));
+        JButton randomField = new JButton("Random Field");
 
         quitButton.setPreferredSize(new Dimension(25, 25));
         quitButton.addActionListener(quitButtonListener());
         startPauseButton.addActionListener(startPauseButtonLisenter());
+        randomField.addActionListener(randomFieldListener());
 
         this.add(startPauseButton, BorderLayout.WEST);
         this.add(speed, BorderLayout.CENTER);
+        this.add(randomField);
 
         //todo maybe add the tiny ^v things to increment speedInput by 1
         pixelSpeedInput = new JFormattedTextField(integerInstance);
         pixelSpeedInput.setValue(0);
         pixelSpeedInput.addMouseListener(clearFieldListener(pixelSpeedInput));
+        pixelSpeedInput.setSize(new Dimension(25, 25));
 
         this.add(pixelSpeedInput, BorderLayout.CENTER);
         this.add(quitButton, BorderLayout.EAST);
@@ -90,6 +94,13 @@ public class ControlPanel extends JPanel {
             public void mouseClicked(MouseEvent e){
                 field.setText("");
             }
+        };
+    }
+
+    private ActionListener randomFieldListener() {
+        return actionEvent -> {
+            animationPanel.changeToRandomRhombusField();
+            animationPanel.paintImmediately(0,0,500,500);
         };
     }
 }
