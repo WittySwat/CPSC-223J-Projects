@@ -28,14 +28,15 @@ public class ControlPanel extends JPanel {
     private JFormattedTextField pixelSpeedInput;
     private final NumberFormat integerInstance = NumberFormat.getIntegerInstance();
     private JButton startPauseButton;
+    private JButton randomField;
 
     public ControlPanel(AnimationPanel animationPanel) {
         //Calls super() and sets size constraints, color, and border
-        super(new GridLayout(1, 4));
+        super(new FlowLayout());
         this.animationPanel = animationPanel;
         this.setBackground(new Color(255, 105, 97));
         this.setPreferredSize(new Dimension(550, 50));
-        this.setBorder(BorderFactory.createEmptyBorder(15,20,15,20));
+        this.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
 
         createAndAddButtons();
     }
@@ -43,26 +44,30 @@ public class ControlPanel extends JPanel {
 
     private void createAndAddButtons() {
         startPauseButton = new JButton("Start");
-        JButton quitButton = new JButton("Quit");
-        JLabel speed = new JLabel("Speed");
-        speed.setFont(new Font(Font.DIALOG, Font.BOLD,20));
-        JButton randomField = new JButton("Random Field");
-
-        quitButton.setPreferredSize(new Dimension(25, 25));
-        quitButton.addActionListener(quitButtonListener());
         startPauseButton.addActionListener(startPauseButtonLisenter());
-        randomField.addActionListener(randomFieldListener());
+        startPauseButton.setPreferredSize(new Dimension(65, 35));
 
-        this.add(startPauseButton, BorderLayout.WEST);
-        this.add(speed, BorderLayout.CENTER);
-        this.add(randomField);
+        randomField = new JButton("Random Field");
+        randomField.addActionListener(fancyRandomFieldListener());
+        randomField.setPreferredSize(new Dimension(120, 35));
+
+        JLabel speed = new JLabel("Speed:");
+        speed.setFont(new Font(Font.DIALOG, Font.BOLD,20));
+        speed.setPreferredSize(new Dimension(70, 35));
+
+        JButton quitButton = new JButton("Quit");
+        quitButton.addActionListener(quitButtonListener());
+        quitButton.setPreferredSize(new Dimension(65, 35));
 
         //todo maybe add the tiny ^v things to increment speedInput by 1
         pixelSpeedInput = new JFormattedTextField(integerInstance);
         pixelSpeedInput.setValue(0);
         pixelSpeedInput.addMouseListener(clearFieldListener(pixelSpeedInput));
-        pixelSpeedInput.setSize(new Dimension(25, 25));
+        pixelSpeedInput.setPreferredSize(new Dimension(65, 35));
 
+        this.add(startPauseButton, BorderLayout.WEST);
+        this.add(randomField);
+        this.add(speed, BorderLayout.CENTER);
         this.add(pixelSpeedInput, BorderLayout.CENTER);
         this.add(quitButton, BorderLayout.EAST);
     }
@@ -97,9 +102,9 @@ public class ControlPanel extends JPanel {
         };
     }
 
-    private ActionListener randomFieldListener() {
+    private ActionListener fancyRandomFieldListener() {
         return actionEvent -> {
-            animationPanel.changeToRandomRhombusField();
+            animationPanel.swapFieldType(randomField);
             animationPanel.paintImmediately(0,0,500,500);
         };
     }

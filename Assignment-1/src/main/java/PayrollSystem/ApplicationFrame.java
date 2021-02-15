@@ -55,7 +55,7 @@ public class ApplicationFrame extends JFrame {
         InfoPanel infoPanel = new InfoPanel("Coffee Bean and Tea Leaf", "Jarrod Burges");
         InputPanel inputPanel = new InputPanel();
         OutputPanel outputPanel = new OutputPanel();
-        ControlPanel controlPanel = new ControlPanel(inputPanel, outputPanel);
+        ControlPanel controlPanel = new ControlPanel(inputPanel, outputPanel, this);
 
         mainPanel.add(infoPanel);
         mainPanel.add(inputPanel);

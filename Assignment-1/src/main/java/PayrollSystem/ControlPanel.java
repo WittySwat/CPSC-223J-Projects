@@ -22,23 +22,28 @@ import java.awt.event.ActionListener;
 public class ControlPanel extends JPanel {
 
     /**
-     * Represents an jburges.InputPanel to gather input variables to be used by
+     * Represents an InputPanel to gather input variables to be used by
      * {@link ControlPanel#computeButtonListener()} math done by
      * {@link MathHelper}
      */
     private final InputPanel inputPanel;
 
     /**
-     * Represents an jburges.OutputPanel to display output variables computed by {@link ControlPanel#computeButtonListener()}
+     * Represents an OutputPanel to display output variables computed by {@link ControlPanel#computeButtonListener()}
      */
     private final OutputPanel outputPanel;
+
+    /**
+     * Represents an ApplicationFrame to display errors found within the {@link ControlPanel#computeButtonListener()}
+     */
+    private final ApplicationFrame applicationFrame;
 
     /**
      * Creates a jburges.ControlPanel with specified {@link InputPanel} and {@link OutputPanel}.
      * @param inputPanel {@link InputPanel} to be used to get input variables
      * @param outputPanel {@link OutputPanel} to be used to display output variables
      */
-    public ControlPanel(InputPanel inputPanel, OutputPanel outputPanel) {
+    public ControlPanel(InputPanel inputPanel, OutputPanel outputPanel, ApplicationFrame applicationFrame) {
         //Calls super() and sets size constraints, color, and border
         super(new GridLayout(1, 3));
         this.setBackground(new Color(255, 105, 97));
@@ -49,6 +54,7 @@ public class ControlPanel extends JPanel {
         //to be used by computeButton
         this.inputPanel = inputPanel;
         this.outputPanel = outputPanel;
+        this.applicationFrame = applicationFrame;
 
         createAndAddButtons();
     }
@@ -77,6 +83,23 @@ public class ControlPanel extends JPanel {
         this.add(quitButton, BorderLayout.EAST);
     }
 
+    private void clearPanels() {
+        //Resets every InputPanel JTextField or JFormattedTextField to either black text or 0.0d
+        inputPanel.getEmployeeNameTextField().setText("");
+        inputPanel.getHoursWorkedTextField().setValue(0.0d);
+        inputPanel.getHourlyPayRateTextField().setValue(0.0d);
+
+        //Resets every OutPanel JLabel to blank text
+        outputPanel.getEmployeeNameLabel().setText("");
+        outputPanel.getRegularPayLabel().setText("");
+        outputPanel.getOvertimePayLabel().setText("");
+        outputPanel.getGrossPayLabel().setText("");
+
+        //Repaints both panels so the changes made above are now seen by the user
+        inputPanel.repaint();
+        outputPanel.repaint();
+    }
+
     /**
      * Returns a new ActionListener with an override of actionPerformed event that upon evoked will
      * clear all JTextFields and JFormattedTextFields within an jburges.InputPanel. As well as clearing all
@@ -87,22 +110,7 @@ public class ControlPanel extends JPanel {
      * @see OutputPanel
      */
     private ActionListener clearButtonListener() {
-        return actionEvent -> {
-            //Resets every jburges.InputPanel JTextField or JFormattedTextField to either black text or 0.0d
-            inputPanel.getEmployeeNameTextField().setText("");
-            inputPanel.getHoursWorkedTextField().setValue(0.0d);
-            inputPanel.getHourlyPayRateTextField().setValue(0.0d);
-
-            //Resets every OutPanel JLabel to blank text
-            outputPanel.getEmployeeNameLabel().setText("");
-            outputPanel.getRegularPayLabel().setText("");
-            outputPanel.getOvertimePayLabel().setText("");
-            outputPanel.getGrossPayLabel().setText("");
-
-            //Repaints both panels so the changes made above are now seen by the user
-            inputPanel.repaint();
-            outputPanel.repaint();
-        };
+        return actionEvent -> clearPanels();
     }
 
     /**
@@ -123,6 +131,24 @@ public class ControlPanel extends JPanel {
 
             double hoursWorked = ((Number)inputPanel.getHoursWorkedTextField().getValue()).doubleValue();
             double hourlyPayRate = ((Number)inputPanel.getHourlyPayRateTextField().getValue()).doubleValue();
+
+            if (hoursWorked < 0) {
+                JOptionPane.showMessageDialog(applicationFrame, "Hours worked cannot be negative.");
+                clearPanels();
+                return;
+            }
+
+            if (hourlyPayRate < 0) {
+                JOptionPane.showMessageDialog(applicationFrame, "Hourly rate cannot be negative.");
+                clearPanels();
+                return;
+            }
+
+            if (24 * 7 < hoursWorked) {
+                JOptionPane.showMessageDialog(applicationFrame, "Hours worked cannot exceed hours in a week.");
+                clearPanels();
+                return;
+            }
 
             //Computes and assigns regularPay and displayed to the outputPanel
             double regularPay = MathHelper.getRegularPay(hoursWorked, hourlyPayRate);

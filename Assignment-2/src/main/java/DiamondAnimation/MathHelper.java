@@ -11,16 +11,10 @@
 package DiamondAnimation;
 
 
-import javax.imageio.ImageIO;
-import javax.management.openmbean.ArrayType;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Random;
 
 public final class MathHelper {
     public static ArrayList<Point2D> bresenham(int x1, int y1, int x2, int y2) {
@@ -82,8 +76,6 @@ public final class MathHelper {
         xPoints = swap(xPoints, 1, 3);
 
         yPoints = swap(yPoints, 2, 3);
-        System.out.println(Arrays.toString(xPoints));
-        System.out.println(Arrays.toString(yPoints));
         return new Polygon(xPoints, yPoints, 4);
     }
 
