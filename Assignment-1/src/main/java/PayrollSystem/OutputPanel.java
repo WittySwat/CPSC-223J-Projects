@@ -19,9 +19,25 @@ import java.awt.*;
  * @email jburges@csu.fullerton.edu
  */
 public class OutputPanel extends JPanel {
+
+    /**
+     * Represents the output field for the employee name.
+     */
     private JLabel employeeNameLabel;
+
+    /**
+     * Represents the output field for regular pay.
+     */
     private JLabel regularPayLabel;
+
+    /**
+     * Represents the output field for overtime pay.
+     */
     private JLabel overtimePayLabel;
+
+    /**
+     * Represents the output field for  gross pay.
+     */
     private JLabel grossPayLabel;
 
     /**

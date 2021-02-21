@@ -1,0 +1,14 @@
+plugins {
+    id 'java'
+}
+
+group 'jburges'
+version 'JavaDoc-2021-02-01'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
