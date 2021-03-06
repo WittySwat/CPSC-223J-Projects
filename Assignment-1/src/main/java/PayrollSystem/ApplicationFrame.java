@@ -47,9 +47,9 @@ public class ApplicationFrame extends JFrame {
 
     /**
      * Creates {@link InfoPanel}, {@link InputPanel},
-     * @link jburges.OutputPanel}, {@link ControlPanel} and adds it to the mainPanel
+     * {@link OutputPanel}, {@link ControlPanel} and adds it to the mainPanel
      *
-     * @param mainPanel jburges.Main JPanel to be used to hold the other JPanels
+     * @param mainPanel Panel to add every other panel to
      */
     private void createAndAddPanels(JPanel mainPanel) {
         InfoPanel infoPanel = new InfoPanel("Coffee Bean and Tea Leaf", "Jarrod Burges");

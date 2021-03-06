@@ -109,6 +109,7 @@ public class AnimationPanel extends JPanel {
      * is stationary. If the player is currently moving then the function call gets voided.
      *
      * @param delay time between each 1 unit increase of {@link Player}
+     * @param button JButton to change text on between "Start" and "Pause"
      */
     public void moveAcrossDiamond(int delay, JButton button) {
         synchronized (this) {
@@ -155,7 +156,9 @@ public class AnimationPanel extends JPanel {
 
         /**
          * Creates the GameField object with a set field image. If the field image cannot load properly
-         * the background defaults to plain green.
+         * the background defaults to plain green.]
+         *
+         * @param polygon shape of what the player runs around on
          */
         public GameField(Polygon polygon) {
             this.polygon = polygon;

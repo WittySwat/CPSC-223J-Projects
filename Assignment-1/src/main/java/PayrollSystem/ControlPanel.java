@@ -42,6 +42,7 @@ public class ControlPanel extends JPanel {
      * Creates a jburges.ControlPanel with specified {@link InputPanel} and {@link OutputPanel}.
      * @param inputPanel {@link InputPanel} to be used to get input variables
      * @param outputPanel {@link OutputPanel} to be used to display output variables
+     * @param applicationFrame Parent frame that the control panel exists in
      */
     public ControlPanel(InputPanel inputPanel, OutputPanel outputPanel, ApplicationFrame applicationFrame) {
         //Calls super() and sets size constraints, color, and border
