@@ -28,7 +28,7 @@ public class ControlPanel extends JPanel {
     private JFormattedTextField pixelSpeedInput;
     private final NumberFormat integerInstance = NumberFormat.getIntegerInstance();
     private JButton startPauseButton;
-    private JButton randomField;
+    private JButton randomFieldButton;
 
     public ControlPanel(AnimationPanel animationPanel) {
         //Calls super() and sets size constraints, color, and border
@@ -47,31 +47,36 @@ public class ControlPanel extends JPanel {
         startPauseButton.addActionListener(startPauseButtonLisenter());
         startPauseButton.setPreferredSize(new Dimension(65, 35));
 
-        randomField = new JButton("Random Field");
-        randomField.addActionListener(fancyRandomFieldListener());
-        randomField.setPreferredSize(new Dimension(120, 35));
+        randomFieldButton = new JButton("Random Field");
+        randomFieldButton.addActionListener(fancyRandomFieldListener());
+        randomFieldButton.setPreferredSize(new Dimension(120, 35));
 
-        JLabel speed = new JLabel("Speed:");
-        speed.setFont(new Font(Font.DIALOG, Font.BOLD,20));
-        speed.setPreferredSize(new Dimension(70, 35));
+        JLabel speedLabel = new JLabel("Speed:");
+        speedLabel.setFont(new Font(Font.DIALOG, Font.BOLD,20));
+        speedLabel.setPreferredSize(new Dimension(70, 35));
 
         JButton quitButton = new JButton("Quit");
         quitButton.addActionListener(quitButtonListener());
         quitButton.setPreferredSize(new Dimension(65, 35));
 
-        //todo maybe add the tiny ^v things to increment speedInput by 1
         pixelSpeedInput = new JFormattedTextField(integerInstance);
         pixelSpeedInput.setValue(0);
         pixelSpeedInput.addMouseListener(clearFieldListener(pixelSpeedInput));
         pixelSpeedInput.setPreferredSize(new Dimension(65, 35));
 
         this.add(startPauseButton, BorderLayout.WEST);
-        this.add(randomField);
-        this.add(speed, BorderLayout.CENTER);
+        this.add(randomFieldButton);
+        this.add(speedLabel, BorderLayout.CENTER);
         this.add(pixelSpeedInput, BorderLayout.CENTER);
         this.add(quitButton, BorderLayout.EAST);
     }
 
+    /**
+     * Returns a new ActionListener with an override of actionPerformed event that upon evoked will
+     * start the player to move around the diamond. If this Listener gets evoked again the player will stop moving.
+     *
+     * @return ActionListener
+     */
     private ActionListener startPauseButtonLisenter() {
         return actionEvent -> {
             animationPanel.moveAcrossDiamond(((Number)pixelSpeedInput.getValue()).intValue(), startPauseButton);
@@ -85,6 +90,19 @@ public class ControlPanel extends JPanel {
      */
     private ActionListener quitButtonListener() {
         return actionEvent -> System.exit(0);
+    }
+
+    /**
+     * Returns a new ActionListener with an override of actionPerformed event that upon evoked will toggle the
+     * gamefield between fancy field and a random field.
+     *
+     * @return ActionListener
+     */
+    private ActionListener fancyRandomFieldListener() {
+        return actionEvent -> {
+            animationPanel.swapFieldType(randomFieldButton);
+            animationPanel.paintImmediately(0,0,500,500);
+        };
     }
 
     /**
@@ -102,10 +120,4 @@ public class ControlPanel extends JPanel {
         };
     }
 
-    private ActionListener fancyRandomFieldListener() {
-        return actionEvent -> {
-            animationPanel.swapFieldType(randomField);
-            animationPanel.paintImmediately(0,0,500,500);
-        };
-    }
 }
