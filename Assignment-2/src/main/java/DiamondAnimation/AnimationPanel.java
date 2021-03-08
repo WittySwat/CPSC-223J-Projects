@@ -42,8 +42,11 @@ public class AnimationPanel extends JPanel {
      */
     private Timer timer = null;
 
-    private int[] defaultXPoints = {250, 450, 250, 50};
-    private int[] defaultYPoints = {50, 250, 450, 250};
+    private int CANVAS_WIDTH = 750;
+    private int CANVAS_HEIGHT = 750;
+
+    private int[] defaultXPoints = {CANVAS_WIDTH/2, (int) (CANVAS_WIDTH*0.9), CANVAS_WIDTH/2, (int) (CANVAS_WIDTH*0.1)};
+    private int[] defaultYPoints = {(int) (CANVAS_HEIGHT*0.1), CANVAS_HEIGHT/2, (int) (CANVAS_HEIGHT*0.9), CANVAS_HEIGHT/2};
 
     /**
      * The default polygon the player will run around on. Created using {@link #defaultXPoints} and {@link #defaultYPoints}
@@ -51,14 +54,14 @@ public class AnimationPanel extends JPanel {
     private Polygon defaultPolygon = new Polygon(defaultXPoints, defaultYPoints, 4);
 
     /**
-     * Creates an DiamondAnimation.AnimationPanel with preset height and width equal to 500.
+     * Creates an DiamondAnimation.AnimationPanel with preset height and width equal to 1000.
      */
     public AnimationPanel() {
         gameField = new GameField(defaultPolygon);
         player = new Player(defaultPolygon.xpoints[0], defaultPolygon.ypoints[0], defaultPolygon, gameField);
-        gameField.setPreferredSize(new Dimension(500, 500));
+        gameField.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
 
-        this.setMaximumSize(new Dimension(500, 500));
+        this.setMaximumSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
 
         this.setLayout(new GridLayout());
         this.add(gameField);
@@ -74,7 +77,7 @@ public class AnimationPanel extends JPanel {
     public void swapFieldType(JButton button) {
         if (timer == null) {
             if (gameField.fancyField) {
-                gameField.polygon = MathHelper.generateRandomRhombus();
+                gameField.polygon = MathHelper.generateRandomRhombus(50, (int) (CANVAS_HEIGHT*0.9));
                 player.setX(gameField.polygon.xpoints[0]);
                 player.setY(gameField.polygon.ypoints[0]);
                 player.setxPoints(gameField.polygon.xpoints);
@@ -145,7 +148,7 @@ public class AnimationPanel extends JPanel {
         /**
          * Represents the background image of this object.
          */
-        private BufferedImage fieldImage;
+        private Image fieldImage;
 
         /**
          * Represents the shape of the diamond or rhombus for the player to move around on.
@@ -209,14 +212,9 @@ class Player {
     private int lastPos = 0;
     private int[] xPoints;
     private int[] yPoints;
-    private final ArrayList<ArrayList<Point2D>> everypoint2D;
+    private final ArrayList<ArrayList<Point2D>> everyPoint2D;
     private int pos = 0;
     private AnimationPanel.GameField gameField;
-
-    /**
-     * @param x      x coordinate on the {@link AnimationPanel.GameField}
-     * @param y      y coordinate on the {@link AnimationPanel.GameField}
-     */
 
     /**
      *
@@ -232,11 +230,11 @@ class Player {
         this.xPoints = polygon.xpoints;
         this.yPoints = polygon.ypoints;
 
-        everypoint2D = new ArrayList<>(4);
-        everypoint2D.add(MathHelper.bresenham(xPoints[0], yPoints[0], xPoints[1], yPoints[1]));
-        everypoint2D.add(MathHelper.bresenham(xPoints[1], yPoints[1], xPoints[2], yPoints[2]));
-        everypoint2D.add(MathHelper.bresenham(xPoints[2], yPoints[2], xPoints[3], yPoints[3]));
-        everypoint2D.add(MathHelper.bresenham(xPoints[3], yPoints[3], xPoints[0], yPoints[0]));
+        everyPoint2D = new ArrayList<>(4);
+        everyPoint2D.add(MathHelper.bresenham(xPoints[0], yPoints[0], xPoints[1], yPoints[1]));
+        everyPoint2D.add(MathHelper.bresenham(xPoints[1], yPoints[1], xPoints[2], yPoints[2]));
+        everyPoint2D.add(MathHelper.bresenham(xPoints[2], yPoints[2], xPoints[3], yPoints[3]));
+        everyPoint2D.add(MathHelper.bresenham(xPoints[3], yPoints[3], xPoints[0], yPoints[0]));
 
         try {
             playerImage = ImageIO.read(getClass().getResourceAsStream("/player.png"));
@@ -275,11 +273,11 @@ class Player {
      * Refreshes the point arrays for every line segment in the player's polygon.
      */
     public void refreshPointArray() {
-        everypoint2D.clear();
-        everypoint2D.add(MathHelper.bresenham(xPoints[0], yPoints[0], xPoints[1], yPoints[1]));
-        everypoint2D.add(MathHelper.bresenham(xPoints[1], yPoints[1], xPoints[2], yPoints[2]));
-        everypoint2D.add(MathHelper.bresenham(xPoints[2], yPoints[2], xPoints[3], yPoints[3]));
-        everypoint2D.add(MathHelper.bresenham(xPoints[3], yPoints[3], xPoints[0], yPoints[0]));
+        everyPoint2D.clear();
+        everyPoint2D.add(MathHelper.bresenham(xPoints[0], yPoints[0], xPoints[1], yPoints[1]));
+        everyPoint2D.add(MathHelper.bresenham(xPoints[1], yPoints[1], xPoints[2], yPoints[2]));
+        everyPoint2D.add(MathHelper.bresenham(xPoints[2], yPoints[2], xPoints[3], yPoints[3]));
+        everyPoint2D.add(MathHelper.bresenham(xPoints[3], yPoints[3], xPoints[0], yPoints[0]));
     }
 
 
@@ -289,18 +287,21 @@ class Player {
     public void moveOneUnitUpdate() {
         //resets pos counter and increments lastPos if pos equals the size of the point array
         //means that the player has reached a new corner of the polygon
-        if (pos == everypoint2D.get(lastPos%4).size()) {
+        if (pos == everyPoint2D.get(lastPos%4).size()) {
             pos = 0;
             lastPos++;
+            System.out.println("X: " + x + "Y: " + y);
         }
         //moves the player to the next x,y coordinate in the point2D array
-        this.x = (int) everypoint2D.get(lastPos%4).get(pos).getX();
-        this.y = (int) everypoint2D.get(lastPos%4).get(pos).getY();
+        this.x = (int) everyPoint2D.get(lastPos%4).get(pos).getX();
+        this.y = (int) everyPoint2D.get(lastPos%4).get(pos).getY();
+
+        //System.out.println("X: " + x + "Y: " + y);
         pos++;
         //only update the gamefield every 4th unit update
         //visually no impact but code speed increases greatly
         if (pos % 4 == 0)
-            gameField.paintImmediately(0, 0,500,500);
+            gameField.paintImmediately(0, 0, gameField.getWidth(), gameField.getHeight());
     }
 
     public int getLastPos() {

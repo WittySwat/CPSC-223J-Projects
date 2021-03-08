@@ -16,6 +16,11 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Math class that contains every complex math function used in the program
+ * @author Jarrod Burges
+ * @email jburges@csu.fullerton.edu
+ */
 public final class MathHelper {
     /**
      * Using bresenham's algorithm to find every integer point between two given points in a cartesian grid.
@@ -74,15 +79,17 @@ public final class MathHelper {
     /**
      * Generates a random rhombus with four points in the order of bottom, right, top, left.
      *
+     * @param min minimum number for the polygon's coordinates to have
+     * @param max maximum number for the polygon's coordinates to have
      * @return A random polygon with four sides
      */
-    public static Polygon generateRandomRhombus() {
+    public static Polygon generateRandomRhombus(int min, int max) {
         int[] xPoints = new int[4];
         int[] yPoints = new int[4];
         //randomly creates xPoints and yPoints arrays with a range of [25, 450]
         for (int i = 0; i < 4; i++) {
-            xPoints[i] = (int) (Math.random() * 450) + 25;
-            yPoints[i] = (int) (Math.random() * 450) + 25;
+            xPoints[i] = (int) (Math.random() * max + min);
+            yPoints[i] = (int) (Math.random() * max) + min;
         }
 
         //sorts the arrays from smallest to largest

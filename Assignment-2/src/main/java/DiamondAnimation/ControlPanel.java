@@ -101,7 +101,7 @@ public class ControlPanel extends JPanel {
     private ActionListener fancyRandomFieldListener() {
         return actionEvent -> {
             animationPanel.swapFieldType(randomFieldButton);
-            animationPanel.paintImmediately(0,0,500,500);
+            animationPanel.paintImmediately(0,0,1000,1000);
         };
     }
 

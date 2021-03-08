@@ -33,7 +33,7 @@ public class ApplicationFrame extends JFrame {
     public ApplicationFrame(String title) throws HeadlessException {
         //Calls super() and sets size constraints and close operation
         super(title);
-        this.setSize(new Dimension(550, 700));
+        this.setSize(new Dimension(800, 950));
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setResizable(false);
 
