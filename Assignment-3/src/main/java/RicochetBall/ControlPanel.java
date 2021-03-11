@@ -36,11 +36,13 @@ public class ControlPanel extends JPanel {
 
     public ControlPanel(AnimationPanel animationPanel) {
         //Calls super() and sets size constraints, color, and border
-        super(new GridLayout(3, 1));
+        //super(new GridLayout(1, 2));
+        super();
+        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.animationPanel = animationPanel;
         this.setBackground(new Color(255, 105, 97));
         this.setPreferredSize(new Dimension(1000, 200));
-        this.setBorder(BorderFactory.createEmptyBorder(15,15,15,15));
+        this.setBorder(BorderFactory.createEmptyBorder(25,25,25,25));
 
         createAndAddButtons();
     }
@@ -59,15 +61,15 @@ public class ControlPanel extends JPanel {
         clearButton.addActionListener(clearButtonListener());
         clearButton.setPreferredSize(new Dimension(65, 35));
 
-        JLabel refreshRateLabel = new JLabel("Refresh Rate (Hz)");
+        JLabel refreshRateLabel = new JLabel("    Refresh Rate (Hz)");
         refreshRateLabel.setFont(new Font(Font.DIALOG, Font.BOLD,15));
         refreshRateLabel.setPreferredSize(new Dimension(150, 35));
 
-        JLabel speedLabel = new JLabel("Speed (pix/sec)");
+        JLabel speedLabel = new JLabel("     Speed (pix/sec)");
         speedLabel.setFont(new Font(Font.DIALOG, Font.BOLD,15));
         speedLabel.setPreferredSize(new Dimension(150, 35));
 
-        JLabel directionLabel = new JLabel("Direction");
+        JLabel directionLabel = new JLabel("       Direction");
         directionLabel.setFont(new Font(Font.DIALOG, Font.BOLD, 15));
         directionLabel.setPreferredSize(new Dimension(150, 35));
 
@@ -90,29 +92,78 @@ public class ControlPanel extends JPanel {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout());
 
-        topPanel.add(startPauseButton, BorderLayout.WEST);
-        topPanel.add(clearButton, BorderLayout.CENTER);
-        topPanel.add(quitButton, BorderLayout.EAST);
-
+        topPanel.add(startPauseButton);
+        topPanel.add(refreshRateLabel);
+        topPanel.add(refreshRateInput);
 
         JPanel middlePanel = new JPanel();
         middlePanel.setLayout(new FlowLayout());
 
-        middlePanel.add(refreshRateLabel, BorderLayout.CENTER);
-        middlePanel.add(speedLabel, BorderLayout.CENTER);
-        middlePanel.add(directionLabel, BorderLayout.CENTER);
-
+        middlePanel.add(clearButton);
+        middlePanel.add(speedLabel);
+        middlePanel.add(pixelSpeedInput);
 
         JPanel bottomPanel = new JPanel();
         bottomPanel.setLayout(new FlowLayout());
 
-        bottomPanel.add(pixelSpeedInput);
-        bottomPanel.add(refreshRateInput);
+        bottomPanel.add(quitButton);
+        bottomPanel.add(directionLabel);
         bottomPanel.add(directionInput);
 
-        this.add(topPanel);
-        this.add(middlePanel);
-        this.add(bottomPanel);
+        JPanel inputControls = new JPanel();
+        inputControls.setLayout(new BoxLayout(inputControls, BoxLayout.Y_AXIS));
+        inputControls.add(topPanel);
+        inputControls.add(middlePanel);
+        inputControls.add(bottomPanel);
+
+        this.add(inputControls);
+
+        this.add(Box.createRigidArea(new Dimension(350,0)));
+
+        JPanel ballLocationPanel = new JPanel();
+        ballLocationPanel.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+        ballLocationPanel.setLayout(new BoxLayout(ballLocationPanel, BoxLayout.Y_AXIS));
+
+        JLabel ballLocationLabel = new JLabel("Ball Location");
+        ballLocationLabel.setFont(new Font(Font.DIALOG, Font.BOLD,15));
+        ballLocationLabel.setPreferredSize(new Dimension(150, 35));
+
+        ballLocationPanel.add(ballLocationLabel);
+
+        JPanel xPanel = new JPanel();
+        xPanel.setLayout(new BoxLayout(xPanel, BoxLayout.X_AXIS));
+
+        JLabel xLocationLabel = new JLabel("X = ");
+        xLocationLabel.setFont(new Font(Font.DIALOG, Font.BOLD,15));
+        xLocationLabel.setPreferredSize(new Dimension(65, 35));
+
+        JFormattedTextField xBallLocationInput = new JFormattedTextField(integerInstance);
+        xBallLocationInput.setValue(0);
+        xBallLocationInput.addMouseListener(clearFieldListener(xBallLocationInput));
+        xBallLocationInput.setPreferredSize(new Dimension(65, 35));
+
+        xPanel.add(xLocationLabel);
+        xPanel.add(xBallLocationInput);
+
+        JPanel yPanel = new JPanel();
+        yPanel.setLayout(new BoxLayout(yPanel, BoxLayout.X_AXIS));
+
+        JFormattedTextField yBallLocationInput = new JFormattedTextField(integerInstance);
+        yBallLocationInput.setValue(0);
+        yBallLocationInput.addMouseListener(clearFieldListener(yBallLocationInput));
+        yBallLocationInput.setPreferredSize(new Dimension(65, 35));
+
+        JLabel yLocationLabel = new JLabel("Y = ");
+        yLocationLabel.setFont(new Font(Font.DIALOG, Font.BOLD,15));
+        yLocationLabel.setPreferredSize(new Dimension(65, 35));
+
+        yPanel.add(yLocationLabel);
+        yPanel.add(yBallLocationInput);
+
+        ballLocationPanel.add(xPanel);
+        ballLocationPanel.add(yPanel);
+
+        this.add(ballLocationPanel);
     }
 
     /**
@@ -123,7 +174,7 @@ public class ControlPanel extends JPanel {
      */
     private ActionListener startPauseButtonLisenter() {
         return actionEvent -> {
-            animationPanel.moveAcrossDiamond(((Number)pixelSpeedInput.getValue()).intValue(), startPauseButton);
+            animationPanel.moveBall(((Number)pixelSpeedInput.getValue()).intValue(), startPauseButton);
         };
     }
 
@@ -137,8 +188,7 @@ public class ControlPanel extends JPanel {
     }
 
     /**
-     * Returns a new ActionListener with an override of actionPerformed event that upon evoked will toggle the
-     * gamefield between fancy field and a random field.
+     * Returns a new ActionListener with an override of actionPerformed event that upon evoked will
      *
      * @return ActionListener
      */
