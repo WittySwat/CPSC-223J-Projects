@@ -213,12 +213,6 @@ public class ControlPanel extends JPanel {
         };
     }
 
-    private void refreshInputLabels() {
-        directionInput.setValue(animationPanel.getBall().getTheta());
-        xBallLocationInput.setValue(animationPanel.getBall().getX());
-        yBallLocationInput.setValue(animationPanel.getBall().getY());
-    }
-
     /**
      * Returns a new ActionListener with an override of actionPerformed event that upon evoked will quit the program.
      *
@@ -247,7 +241,10 @@ public class ControlPanel extends JPanel {
                     false);
             animationPanel.getBall().resetBall();
             animationPanel.repaint();
-            refreshInputLabels();
+
+            directionInput.setValue(animationPanel.getBall().getTheta());
+            xBallLocationInput.setValue(animationPanel.getBall().getX());
+            yBallLocationInput.setValue(animationPanel.getBall().getY());
         };
     }
 

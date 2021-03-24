@@ -44,7 +44,7 @@ public class AnimationPanel extends JPanel {
     private int Y_CENTER = CANVAS_HEIGHT/2;
 
     /**
-     * Creates an DiamondAnimation.AnimationPanel with preset height and width equal to 1000.
+     * Creates an DiamondAnimation.AnimationPanel with preset width and height equal to 1000 and 750.
      */
     public AnimationPanel() {
         gameField = new GameField();
@@ -67,17 +67,23 @@ public class AnimationPanel extends JPanel {
      * Moves {@link AnimationPanel#ball} across every point on the {@link GameField}.
      * In the order of bottom, right, top, left, then back to bottom. This movement only occurs if the ball
      * is stationary. If the ball is currently moving then the function call gets voided.
-     *  @param delay time between each 1 unit increase of {@link Ball}
+     *
+     * @param delay time between each 1 unit increase of {@link Ball}
+     * @param theta angle in degrees to move the ball in
+     * @param x x coordinate where the ball currently is
+     * @param y y coordinate where the ball currently is
      * @param button JButton to change text on between "Start" and "Pause"
-     * @param xBallLocationInput
-     * @param yBallLocationInput
+     * @param xBallLocationInput JFormattedTextField representing the x coordniate input
+     * @param yBallLocationInput JFormattedTextField representing the y coordniate input
+     * @param directionInput JFormattedTextField representing the direction(theta) input
+     * @param stopImmediately boolean to stop the timer clock immediately when true
      */
-    public void moveBall(int delay, double theta, int x, int y, JButton button, JFormattedTextField xBallLocationInput, JFormattedTextField yBallLocationInput, JFormattedTextField directionInput, boolean stopImmediatly) {
+    public void moveBall(int delay, double theta, int x, int y, JButton button, JFormattedTextField xBallLocationInput, JFormattedTextField yBallLocationInput, JFormattedTextField directionInput, boolean stopImmediately) {
         ball.setTheta(theta);
         ball.setX(x);
         ball.setY(y);
         synchronized (this) {
-            if (timer != null || stopImmediatly) {
+            if (timer != null || stopImmediately) {
                 timer.stop();
                 timer = null;
                 button.setText("Start");
