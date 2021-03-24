@@ -18,6 +18,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.NumberFormat;
 
 /**
@@ -31,12 +33,15 @@ public class ControlPanel extends JPanel {
     private JFormattedTextField pixelSpeedInput;
     private JFormattedTextField refreshRateInput;
     private JFormattedTextField directionInput;
+    private JFormattedTextField xBallLocationInput;
+    private JFormattedTextField yBallLocationInput;
     private final NumberFormat integerInstance = NumberFormat.getIntegerInstance();
     private JButton startPauseButton;
+    private int CANVAS_WIDTH = 1000;
+    private int CANVAS_HEIGHT = 1000;
 
     public ControlPanel(AnimationPanel animationPanel) {
         //Calls super() and sets size constraints, color, and border
-        //super(new GridLayout(1, 2));
         super();
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.animationPanel = animationPanel;
@@ -51,15 +56,15 @@ public class ControlPanel extends JPanel {
     private void createAndAddButtons() {
         startPauseButton = new JButton("Start");
         startPauseButton.addActionListener(startPauseButtonLisenter());
-        startPauseButton.setPreferredSize(new Dimension(65, 35));
+        startPauseButton.setPreferredSize(new Dimension(75, 35));
 
         JButton quitButton = new JButton("Quit");
         quitButton.addActionListener(quitButtonListener());
-        quitButton.setPreferredSize(new Dimension(65, 35));
+        quitButton.setPreferredSize(new Dimension(75, 35));
 
         JButton clearButton = new JButton("Clear");
         clearButton.addActionListener(clearButtonListener());
-        clearButton.setPreferredSize(new Dimension(65, 35));
+        clearButton.setPreferredSize(new Dimension(75, 35));
 
         JLabel refreshRateLabel = new JLabel("    Refresh Rate (Hz)");
         refreshRateLabel.setFont(new Font(Font.DIALOG, Font.BOLD,15));
@@ -137,8 +142,8 @@ public class ControlPanel extends JPanel {
         xLocationLabel.setFont(new Font(Font.DIALOG, Font.BOLD,15));
         xLocationLabel.setPreferredSize(new Dimension(65, 35));
 
-        JFormattedTextField xBallLocationInput = new JFormattedTextField(integerInstance);
-        xBallLocationInput.setValue(0);
+        xBallLocationInput = new JFormattedTextField(integerInstance);
+        xBallLocationInput.setValue(CANVAS_WIDTH/2);
         xBallLocationInput.addMouseListener(clearFieldListener(xBallLocationInput));
         xBallLocationInput.setPreferredSize(new Dimension(65, 35));
 
@@ -148,8 +153,8 @@ public class ControlPanel extends JPanel {
         JPanel yPanel = new JPanel();
         yPanel.setLayout(new BoxLayout(yPanel, BoxLayout.X_AXIS));
 
-        JFormattedTextField yBallLocationInput = new JFormattedTextField(integerInstance);
-        yBallLocationInput.setValue(0);
+        yBallLocationInput = new JFormattedTextField(integerInstance);
+        yBallLocationInput.setValue(CANVAS_HEIGHT/2);
         yBallLocationInput.addMouseListener(clearFieldListener(yBallLocationInput));
         yBallLocationInput.setPreferredSize(new Dimension(65, 35));
 
@@ -169,13 +174,49 @@ public class ControlPanel extends JPanel {
     /**
      * Returns a new ActionListener with an override of actionPerformed event that upon evoked will
      * start the player to move around the diamond. If this Listener gets evoked again the player will stop moving.
+     * Also contains input checkers to make sure no wrong inputs are being inputted before calculations are made.
      *
      * @return ActionListener
      */
     private ActionListener startPauseButtonLisenter() {
         return actionEvent -> {
-            animationPanel.moveBall(((Number)pixelSpeedInput.getValue()).intValue(), startPauseButton);
+            AnimationPanel.GameField gameField = animationPanel.getGameField();
+            if (((Number)refreshRateInput.getValue()).intValue() <= 0) {
+                JOptionPane.showMessageDialog(animationPanel, "Refresh Rate input cannot be negative or zero");
+                return;
+            }
+
+            if (((Number)pixelSpeedInput.getValue()).intValue() <= 0) {
+                JOptionPane.showMessageDialog(animationPanel, "Pixel Speed input cannot be negative or zero");
+                return;
+            }
+
+            if (((Number) xBallLocationInput.getValue()).intValue() < 0 || ((Number) xBallLocationInput.getValue()).intValue() > gameField.getSize().width) {
+                JOptionPane.showMessageDialog(animationPanel, "X location cannot be placed outside game board, between numbers 1 and " + gameField.getSize().width);
+                return;
+            }
+
+            if (((Number) yBallLocationInput.getValue()).intValue() < 0 || ((Number) yBallLocationInput.getValue()).intValue() > gameField.getSize().height) {
+                JOptionPane.showMessageDialog(animationPanel, "Y location cannot be placed outside game board, between numbers 1 and " + gameField.getSize().height);
+                return;
+            }
+
+            animationPanel.moveBall(1000/((Number)pixelSpeedInput.getValue()).intValue(),
+                    ((Number)directionInput.getValue()).intValue(),
+                    ((Number)xBallLocationInput.getValue()).intValue(),
+                    ((Number)yBallLocationInput.getValue()).intValue(),
+                    startPauseButton,
+                    xBallLocationInput,
+                    yBallLocationInput,
+                    directionInput,
+                    false);
         };
+    }
+
+    private void refreshInputLabels() {
+        directionInput.setValue(animationPanel.getBall().getTheta());
+        xBallLocationInput.setValue(animationPanel.getBall().getX());
+        yBallLocationInput.setValue(animationPanel.getBall().getY());
     }
 
     /**
@@ -194,7 +235,19 @@ public class ControlPanel extends JPanel {
      */
     private ActionListener clearButtonListener() {
         return actionEvent -> {
-
+            int delay = ((Number)refreshRateInput.getValue()).intValue()/((Number)pixelSpeedInput.getValue()).intValue();
+            animationPanel.moveBall(delay,
+                    ((Number)directionInput.getValue()).intValue(),
+                    ((Number)xBallLocationInput.getValue()).intValue(),
+                    ((Number)yBallLocationInput.getValue()).intValue(),
+                    startPauseButton,
+                    xBallLocationInput,
+                    yBallLocationInput,
+                    directionInput,
+                    false);
+            animationPanel.getBall().resetBall();
+            animationPanel.repaint();
+            refreshInputLabels();
         };
     }
 

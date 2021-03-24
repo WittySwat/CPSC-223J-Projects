@@ -33,12 +33,12 @@ public class AnimationPanel extends JPanel {
     private Ball ball;
 
     /**
-     * Timer that controls the ball's movement inside {@link AnimationPanel#moveBall(int, JButton)}
+     * Timer that controls the ball's movement inside {@link AnimationPanel#moveBall(int, double, int, int, JButton, JFormattedTextField, JFormattedTextField, JFormattedTextField, boolean)}
      */
     private Timer timer = null;
 
     private int CANVAS_WIDTH = 1000;
-    private int CANVAS_HEIGHT = 800;
+    private int CANVAS_HEIGHT = 750;
 
     private int X_CENTER = CANVAS_WIDTH/2;
     private int Y_CENTER = CANVAS_HEIGHT/2;
@@ -48,7 +48,7 @@ public class AnimationPanel extends JPanel {
      */
     public AnimationPanel() {
         gameField = new GameField();
-        ball = new Ball(X_CENTER, Y_CENTER, 180.0, gameField);
+        ball = new Ball(X_CENTER, Y_CENTER, 0, gameField);
         gameField.setPreferredSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
 
         this.setMaximumSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
@@ -59,31 +59,44 @@ public class AnimationPanel extends JPanel {
         setVisible(true);
     }
 
+    public GameField getGameField() {
+        return gameField;
+    }
 
     /**
      * Moves {@link AnimationPanel#ball} across every point on the {@link GameField}.
      * In the order of bottom, right, top, left, then back to bottom. This movement only occurs if the ball
      * is stationary. If the ball is currently moving then the function call gets voided.
-     *
-     * @param delay time between each 1 unit increase of {@link Ball}
+     *  @param delay time between each 1 unit increase of {@link Ball}
      * @param button JButton to change text on between "Start" and "Pause"
+     * @param xBallLocationInput
+     * @param yBallLocationInput
      */
-    public void moveBall(int delay, JButton button) {
+    public void moveBall(int delay, double theta, int x, int y, JButton button, JFormattedTextField xBallLocationInput, JFormattedTextField yBallLocationInput, JFormattedTextField directionInput, boolean stopImmediatly) {
+        ball.setTheta(theta);
+        ball.setX(x);
+        ball.setY(y);
         synchronized (this) {
-            if (timer != null) {
+            if (timer != null || stopImmediatly) {
                 timer.stop();
                 timer = null;
                 button.setText("Start");
             } else {
                 button.setText("Pause");
                 timer = new Timer(delay, e -> {
-                    System.out.println("Timer running");
                     ball.moveOneUnitUpdate();
-                    gameField.paintImmediately(0,0, 1000,800);
+                    xBallLocationInput.setValue(ball.getX());
+                    yBallLocationInput.setValue(ball.getY());
+                    directionInput.setValue(ball.getTheta());
+                    gameField.paintImmediately(0, 0, (int) gameField.getSize().getWidth(), (int) gameField.getSize().getHeight());
                 });
                 timer.start();
             }
         }
+    }
+
+    public Ball getBall() {
+        return this.ball;
     }
 
     /**
@@ -91,7 +104,6 @@ public class AnimationPanel extends JPanel {
      * exists in and moves around in.
      */
     class GameField extends JPanel {
-
         public GameField() {
             this.setBackground(Color.green);
         }
@@ -110,8 +122,8 @@ public class AnimationPanel extends JPanel {
             Graphics2D g2d = (Graphics2D) g;
 
             //rescales and translates g2d to have (0,0) orgin at bottom left rather than top left
-            //g2d.scale(1, -1);
-           // g2d.translate(0, -getHeight());
+            g2d.scale(1, -1);
+            g2d.translate(0, -getHeight());
 
             //only draws the fancy field image if there wasn't errors with loading the image from file
             ball.paint(g2d);
@@ -152,23 +164,45 @@ class Ball {
     }
 
     /**
-     * Moves the ball one unit in the direction it is heading.
+     * Moves the ball one unit in the direction calculated by it's current theta member.
      */
     public void moveOneUnitUpdate() {
-        x += Math.cos(theta) * 1.5;
-        y += Math.sin(theta) * 1.5;
+        x += Math.round(Math.cos(Math.toRadians(theta)));
+        y += Math.round(Math.sin(Math.toRadians(theta)));
+
+        if (x <= 0 || x >= gameField.getSize().getWidth())
+            theta = 180 - theta;
+        else if (y <= 0 || y >= gameField.getSize().getHeight())
+            theta = 360 - theta;
     }
 
+    public void resetBall() {
+        x = ((int) gameField.getSize().getWidth())/2;
+        y = ((int) gameField.getSize().getHeight())/2;
+        theta = 0;
+    }
+
+    public void setTheta(double theta) {
+        this.theta = theta;
+    }
+
+    public double getTheta() {
+        return theta;
+    }
 
     public void setX(int x) {
         this.x = x;
+    }
+
+    public int getX() {
+        return x;
     }
 
     public void setY(int y) {
         this.y = y;
     }
 
-    public void setGameField(AnimationPanel.GameField gameField) {
-        this.gameField = gameField;
+    public int getY() {
+        return y;
     }
 }
