@@ -290,7 +290,6 @@ class Player {
         if (pos == everyPoint2D.get(lastPos%4).size()) {
             pos = 0;
             lastPos++;
-            System.out.println("X: " + x + "Y: " + y);
         }
         //moves the player to the next x,y coordinate in the point2D array
         this.x = (int) everyPoint2D.get(lastPos%4).get(pos).getX();
@@ -300,8 +299,8 @@ class Player {
         pos++;
         //only update the gamefield every 4th unit update
         //visually no impact but code speed increases greatly
-        if (pos % 4 == 0)
-            gameField.paintImmediately(0, 0, gameField.getWidth(), gameField.getHeight());
+        if (pos % 8 == 0)
+            gameField.repaint(0, 0, gameField.getWidth(), gameField.getHeight());
     }
 
     public int getLastPos() {
