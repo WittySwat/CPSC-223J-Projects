@@ -14,9 +14,14 @@
 
 package CatMouse;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 /**
  * Represents the main visual display of the {@link GameField} and {@link Mouse}
@@ -271,6 +276,8 @@ class Mouse {
     private double x;
     private double y;
     private double theta;
+    private BufferedImage mouseImage;
+    private boolean faceRight = true;
     private AnimationPanel.GameField gameField;
 
     /**
@@ -284,6 +291,12 @@ class Mouse {
         this.y = y;
         this.theta = theta;
         this.gameField = gameField;
+
+        try {
+            mouseImage = ImageIO.read(getClass().getResourceAsStream("/mouse.png"));
+        } catch (IllegalArgumentException | IOException e) {
+            mouseImage = null;
+        }
     }
 
     /**
@@ -296,7 +309,24 @@ class Mouse {
         Math.round(x- radius/2.0);
         int paintX = Math.toIntExact(Math.round(x - radius / 2.0));
         int paintY = Math.toIntExact(Math.round(y - radius / 2.0));
-        g2d.fillOval(paintX, paintY, 20, 20);
+
+        if (mouseImage != null) {
+            if (faceRight) {
+                AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+                tx.translate(-mouseImage.getWidth(null), 0);
+                AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+
+                g2d.drawImage(op.filter(mouseImage, null), paintX, paintY, null);
+            } else {
+                //paints the fancy player image centered on the current (x,y)
+                g2d.drawImage(mouseImage, paintX, paintY, null);
+            }
+        }
+        else {
+            //paints an oval representing the player centered on the current (x,y)
+            //only used if there was an issue loading the fancy player image
+            g2d.fillOval(paintX, paintY, 20, 20);
+        }
     }
 
     /**
@@ -305,6 +335,11 @@ class Mouse {
     public void moveOneUnitUpdate() {
         x += (Math.cos(Math.toRadians(theta)));
         y += (Math.sin(Math.toRadians(theta)));
+
+        if ((Math.cos(Math.toRadians(theta))) <= 0) {
+            faceRight = false;
+        } else
+            faceRight = true;
 
         if (x <= 0 || x >= gameField.getSize().getWidth())
             theta = 180 - theta;
@@ -330,9 +365,12 @@ class Mouse {
         return x;
     }
 
-
     public double getY() {
         return y;
+    }
+
+    public void setFaceRight(boolean faceRight) {
+        this.faceRight = faceRight;
     }
 }
 
@@ -343,8 +381,10 @@ class Cat {
     private double x;
     private double y;
     private AnimationPanel.GameField gameField;
+    private BufferedImage catImage;
     private boolean hasReset = false;
     private double distanceToMouse;
+    private boolean faceRight = true;
 
     /**
      * @param x         x coordinate on the {@link AnimationPanel.GameField}
@@ -356,6 +396,12 @@ class Cat {
         this.x = x;
         this.y = y;
         distanceToMouse = 0;
+
+        try {
+            catImage = ImageIO.read(getClass().getResourceAsStream("/cat.png"));
+        } catch (IllegalArgumentException | IOException e) {
+            catImage = null;
+        }
     }
 
     /**
@@ -368,11 +414,29 @@ class Cat {
             this.resetCat();
             hasReset = true;
         }
+
         double radius = 20;
         Math.round(x- radius/2.0);
         int paintX = Math.toIntExact(Math.round(x - radius / 2.0));
         int paintY = Math.toIntExact(Math.round(y - radius / 2.0));
-        g2d.fillOval(paintX, paintY, 20, 20);
+
+        if (catImage != null) {
+            if (faceRight) {
+                AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+                tx.translate(-catImage.getWidth(null), 0);
+                AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+
+                g2d.drawImage(op.filter(catImage, null), paintX, paintY, null);
+            } else {
+                //paints the fancy player image centered on the current (x,y)
+                g2d.drawImage(catImage, paintX, paintY, null);
+            }
+        }
+        else {
+            //paints an oval representing the player centered on the current (x,y)
+            //only used if there was an issue loading the fancy player image
+            g2d.fillOval(paintX, paintY, 20, 20);
+        }
     }
 
     /**
@@ -383,6 +447,11 @@ class Cat {
 
         x += (mouseX - x)/length;
         y += (mouseY - y)/length;
+
+        if (mouseX > x)
+            faceRight = true;
+        else
+            faceRight = false;
     }
 
     public double calculateDistanceToMouse(double mouseX, double mouseY) {
@@ -392,7 +461,7 @@ class Cat {
 
     public void resetCat() {
         x = 10;
-        y = gameField.getSize().getHeight() - 10;
+        y = gameField.getSize().getHeight() - 50;
     }
 
     public double getX() {
@@ -405,5 +474,9 @@ class Cat {
 
     public double getDistanceToMouse() {
         return distanceToMouse;
+    }
+
+    public void setFaceRight(boolean faceRight) {
+        this.faceRight = faceRight;
     }
 }
