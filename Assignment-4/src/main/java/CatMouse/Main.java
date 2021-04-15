@@ -1,5 +1,5 @@
 /*
- * Program Name: "Payroll System".  This program shows how to add and subtract two numbers using a simple UI with three
+ * Program Name: "Cat and Mouse".  This program shows how to add and subtract two numbers using a simple UI with three
  *  active buttons.  Copyright (C) 2021 Jarrod Burges
  *  This program is free software: you can redistribute it and/or modify it under the terms of the GNU
  *  General Public License

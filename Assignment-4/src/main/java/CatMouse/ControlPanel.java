@@ -1,5 +1,5 @@
 /*
- * Program Name: "Payroll System".  This program shows how to add and subtract two numbers using a simple UI with three
+ * Program Name: "Cat and Mouse".  This program shows how to add and subtract two numbers using a simple UI with three
  *  active buttons.  Copyright (C) 2021 Jarrod Burges
  *  This program is free software: you can redistribute it and/or modify it under the terms of the GNU
  *  General Public License
@@ -156,6 +156,14 @@ public class ControlPanel extends JPanel {
         distanceBetweenMouseCatLabel.setFont(new Font(Font.DIALOG, Font.BOLD,15));
         distanceBetweenPanel.add(distanceBetweenMouseCatLabel);
 
+        distanceBetweenPanel.add(Box.createRigidArea(new Dimension(0, 15)));
+
+        JButton randomizeMouseDirectionSpeedButton = new JButton("Randomize Mouse");
+        randomizeMouseDirectionSpeedButton.addActionListener(randomizeButtonListener());
+        randomizeMouseDirectionSpeedButton.setPreferredSize(new Dimension(75, 35));
+
+        distanceBetweenPanel.add(randomizeMouseDirectionSpeedButton);
+
         this.add(distanceBetweenPanel);
 
         this.add(Box.createRigidArea(new Dimension(15,0)));
@@ -286,7 +294,7 @@ public class ControlPanel extends JPanel {
                 return;
             }
 
-            animationPanel.moveBall(
+            animationPanel.moveMouseCat(
                     ((Number)directionInput.getValue()).intValue(),
                     startPauseButton,
                     mousePixelSpeedInput,
@@ -314,7 +322,7 @@ public class ControlPanel extends JPanel {
      */
     private ActionListener clearButtonListener() {
         return actionEvent -> {
-            animationPanel.moveBall(
+            animationPanel.moveMouseCat(
                     ((Number)directionInput.getValue()).intValue(),
                     startPauseButton,
                     mousePixelSpeedInput,
@@ -329,6 +337,18 @@ public class ControlPanel extends JPanel {
             directionInput.setValue(animationPanel.getMouse().getTheta());
 
             refreshLocationInputs();
+        };
+    }
+
+    private ActionListener randomizeButtonListener() {
+        return actionEvent -> {
+            animationPanel.moveMouseCatRandom(
+                    startPauseButton,
+                    mousePixelSpeedInput,
+                    catPixelSpeedInput,
+                    distanceBetweenMouseCatLabel,
+                    this,
+                    false);
         };
     }
 
