@@ -19,35 +19,46 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Random;
 
 /**
- * Represents the main visual display of the {@link GameField} and {@link Mouse}
+ * Represents the main visual display of the {@link GameField} and it's objects {@link Mouse} {@link Cat}
  * @author Jarrod Burges
  * @email jburges@csu.fullerton.edu
  */
 public class AnimationPanel extends JPanel {
+
     /**
      * Represents the main panel GameField that the mouse can be see in
      */
     private final GameField gameField;
 
     /**
-     * Represents the only and main mouse on the {@link GameField}
+     * Represents the main mouse object within a {@link GameField}
      */
     private final Mouse mouse;
 
+    /**
+     * Represents the main cat object within a {@link GameField}
+     */
     private final Cat cat;
 
     /**
      * Timer that controls the mouse's movement inside
      */
     private Timer mouseMovementTimer = null;
+
+    /**
+     * Timer that controls the cat's movement inside
+     */
     private Timer catMovementTimer = null;
+
+    /**
+     * Timer that controls when the {@link GameField} is repainted. Controlled by {@link #REFRESH_RATE} in the unit of Hertz
+     */
     private Timer refreshRateTimer = null;
 
     private final int CANVAS_WIDTH = 1000;
@@ -56,11 +67,18 @@ public class AnimationPanel extends JPanel {
     private final int X_CENTER = CANVAS_WIDTH/2;
     private final int Y_CENTER = CANVAS_HEIGHT/2;
 
-    private final int collosionDistance = 50;
-    private Random random = new Random();
+    /**
+     * Number of times per second the {@link GameField} gets refreshed.
+     */
+    private final int REFRESH_RATE = 120;
 
     /**
-     * Creates an DiamondAnimation.AnimationPanel with preset width and height equal to 1000 and 750.
+     * The distance when a cat has sucessfully caught the mouse.
+     */
+    private final int collisionDistance = 50;
+
+    /**
+     * Creates an DiamondAnimation.AnimationPanel with preset width and height equal to {@link #CANVAS_WIDTH} and {@link #CANVAS_HEIGHT}
      */
     public AnimationPanel() {
         gameField = new GameField();
@@ -87,7 +105,11 @@ public class AnimationPanel extends JPanel {
      *
      * @param theta angle in degrees to move the mouse in
      * @param button JButton to change text on between "Start" and "Pause"
+     * @param mousePixelSpeedInput JFormattedTextField representing the speed in pixel/sec to move the mouse
+     * @param catPixelSpeedInput JFormattedTextField representing the speed in pixel/sec to move the cat
      * @param directionInput JFormattedTextField representing the direction(theta) input
+     * @param distanceBetweenMouseCatLabel JLabel to display the current distance between mouse and cat
+     * @param controlPanel {@link ControlPanel} object to update the location inputs with current positions
      * @param stopImmediately boolean to stop the timer clock immediately when true
      */
     public void moveMouseCat(double theta, JButton button,
@@ -107,7 +129,7 @@ public class AnimationPanel extends JPanel {
             if (mouseMovementTimer == null && stopImmediately) {
                 return;
             }
-            if (cat.getDistanceToMouse() <= collosionDistance) {
+            if (cat.getDistanceToMouse() <= collisionDistance) {
                 controlPanel.resetAndRefreshCatMouseLocation();
                 cat.calculateDistanceToMouse(mouse);
                 return;
@@ -132,7 +154,7 @@ public class AnimationPanel extends JPanel {
                     cat.moveOneUnitTowardPoint(mouse.getX(), mouse.getY());
                     distanceBetweenMouseCatLabel.setText(String.format("%.2f", cat.calculateDistanceToMouse(mouse.getX(), mouse.getY())));
 
-                    if (cat.getDistanceToMouse() <= collosionDistance) {
+                    if (cat.getDistanceToMouse() <= collisionDistance) {
                         button.setText("Start");
                         mouseMovementTimer.stop();
                         catMovementTimer.stop();
@@ -144,7 +166,7 @@ public class AnimationPanel extends JPanel {
                     }
                 });
 
-                refreshRateTimer = new Timer((int) (1000.0/120), e -> {
+                refreshRateTimer = new Timer((int) (1000.0/REFRESH_RATE), e -> {
                     gameField.paintImmediately(0, 0, (int) gameField.getSize().getWidth(), (int) gameField.getSize().getHeight());
                     controlPanel.refreshLocationInputs();
                 });
@@ -156,6 +178,19 @@ public class AnimationPanel extends JPanel {
         }
     }
 
+    /**
+     * Moves {@link AnimationPanel#mouse} across every point on the {@link GameField}.
+     * In the order of bottom, right, top, left, then back to bottom. This movement only occurs if the mouse
+     * is stationary. If the mouse is currently moving then the function call gets voided.
+     *
+     * @param button JButton to change text on between "Start" and "Pause"
+     * @param mousePixelSpeedInput JFormattedTextField representing the speed in pixel/sec to move the mouse
+     * @param catPixelSpeedInput JFormattedTextField representing the speed in pixel/sec to move the cat
+     * @param directionInput JFormattedTextField representing the direction(theta) input
+     * @param distanceBetweenMouseCatLabel JLabel to display the current distance between mouse and cat
+     * @param controlPanel {@link ControlPanel} object to update the location inputs with current positions
+     * @param stopImmediately boolean to stop the timer clock immediately when true
+     */
     public void moveMouseCatRandom(JButton button,
                          JFormattedTextField mousePixelSpeedInput,
                          JFormattedTextField catPixelSpeedInput,
@@ -172,7 +207,7 @@ public class AnimationPanel extends JPanel {
             if (mouseMovementTimer == null && stopImmediately) {
                 return;
             }
-            if (cat.getDistanceToMouse() <= collosionDistance) {
+            if (cat.getDistanceToMouse() <= collisionDistance) {
                 controlPanel.resetAndRefreshCatMouseLocation();
                 cat.calculateDistanceToMouse(mouse);
                 return;
@@ -190,6 +225,7 @@ public class AnimationPanel extends JPanel {
                 button.setText("Start");
             } else {
                 button.setText("Pause");
+                Random random = new Random();
                 mouse.setTheta(random.nextInt(360));
                 directionInput.setValue(mouse.getTheta());
                 mouseMovementTimer = new Timer(mousePixSpeed, e -> {
@@ -234,7 +270,7 @@ public class AnimationPanel extends JPanel {
                     cat.moveOneUnitTowardPoint(mouse.getX(), mouse.getY());
                     distanceBetweenMouseCatLabel.setText(String.format("%.2f", cat.calculateDistanceToMouse(mouse.getX(), mouse.getY())));
 
-                    if (cat.getDistanceToMouse() <= collosionDistance) {
+                    if (cat.getDistanceToMouse() <= collisionDistance) {
                         button.setText("Start");
                         mouseMovementTimer.stop();
                         catMovementTimer.stop();
