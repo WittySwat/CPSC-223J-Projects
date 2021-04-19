@@ -59,7 +59,7 @@ public class ApplicationFrame extends JFrame {
     private void createAndAddPanels(JPanel mainPanel) {
         AnimationPanel animationPanel = new AnimationPanel();
         controlPanel = new ControlPanel(animationPanel);
-        mainPanel.add(new InfoPanel("Ricochet Mouse", "Jarrod Burges"));
+        mainPanel.add(new InfoPanel("Mouse and Cat", "Jarrod Burges"));
         mainPanel.add(animationPanel);
         mainPanel.add(controlPanel);
     }

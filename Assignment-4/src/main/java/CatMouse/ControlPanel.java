@@ -152,7 +152,7 @@ public class ControlPanel extends JPanel {
         distanceUntilLabel.setFont(new Font(Font.DIALOG, Font.BOLD,15));
 
         distanceBetweenPanel.add(distanceUntilLabel);
-        distanceBetweenMouseCatLabel = new JLabel("0");
+        distanceBetweenMouseCatLabel = new JLabel(String.format("%.2f", animationPanel.getCat().getDistanceToMouse()));
         distanceBetweenMouseCatLabel.setFont(new Font(Font.DIALOG, Font.BOLD,15));
         distanceBetweenPanel.add(distanceBetweenMouseCatLabel);
 
@@ -334,7 +334,7 @@ public class ControlPanel extends JPanel {
 
             resetCatMouse();
 
-            directionInput.setValue(animationPanel.getMouse().getTheta());
+            directionInput.setValue(0);
 
             refreshLocationInputs();
         };
@@ -346,6 +346,7 @@ public class ControlPanel extends JPanel {
                     startPauseButton,
                     mousePixelSpeedInput,
                     catPixelSpeedInput,
+                    directionInput,
                     distanceBetweenMouseCatLabel,
                     this,
                     false);

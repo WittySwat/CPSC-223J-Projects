@@ -18,7 +18,6 @@ def getDate() {
     return new Date().format('yyyy-MM-dd')
 }
 
-
 apply plugin:'java'
 
 
