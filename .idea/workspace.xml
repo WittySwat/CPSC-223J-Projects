@@ -22,7 +22,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a606321-75cd-47ef-a678-73d4e13bf7f4" name="Default Changelist" comment="commenting" />
+    <list default="true" id="8a606321-75cd-47ef-a678-73d4e13bf7f4" name="Default Changelist" comment="commenting">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment-4/src/main/java/CatMouse/AnimationPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment-4/src/main/java/CatMouse/AnimationPanel.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

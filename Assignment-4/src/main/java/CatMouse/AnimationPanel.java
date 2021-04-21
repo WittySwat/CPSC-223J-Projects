@@ -86,7 +86,7 @@ public class AnimationPanel extends JPanel {
         this.setMaximumSize(new Dimension(CANVAS_WIDTH, CANVAS_HEIGHT));
 
         mouse = new Mouse(X_CENTER, Y_CENTER, 0, gameField);
-        cat = new Cat(10, ((int) gameField.getSize().getHeight()) - 10, mouse, gameField);
+        cat = new Cat(60, ((int) gameField.getSize().getHeight()) - 25, mouse, gameField);
 
         this.setLayout(new GridLayout());
         this.add(gameField);
@@ -99,9 +99,9 @@ public class AnimationPanel extends JPanel {
     }
 
     /**
-     * Moves {@link AnimationPanel#mouse} across every point on the {@link GameField}.
-     * In the order of bottom, right, top, left, then back to bottom. This movement only occurs if the mouse
-     * is stationary. If the mouse is currently moving then the function call gets voided.
+     * Main game logic method to handle all movement and refresh clocks for the {@link Mouse} and {@link Cat}.
+     * Repetitive method calls toggles the game field state between currently running(clocks active) and not running(clocks inactive)
+     *
      *
      * @param theta angle in degrees to move the mouse in
      * @param button JButton to change text on between "Start" and "Pause"
@@ -112,29 +112,34 @@ public class AnimationPanel extends JPanel {
      * @param controlPanel {@link ControlPanel} object to update the location inputs with current positions
      * @param stopImmediately boolean to stop the timer clock immediately when true
      */
-    public void moveMouseCat(double theta, JButton button,
+    public void moveMouseCat(double theta,
+                             JButton button,
                              JFormattedTextField mousePixelSpeedInput,
                              JFormattedTextField catPixelSpeedInput,
                              JFormattedTextField directionInput,
                              JLabel distanceBetweenMouseCatLabel,
                              ControlPanel controlPanel,
                              boolean stopImmediately) {
-
         int mousePixSpeed = (int) (1000/((Number) mousePixelSpeedInput.getValue()).doubleValue());
         int catPixSpeed = (int) (1000/((Number) catPixelSpeedInput.getValue()).doubleValue());
         mouse.setTheta(theta);
         synchronized (this) {
             //edge case for when you want to reset the field but the cat/mouse aren't moving
             mouse.setTheta(theta);
+            //ignore method call a timer isn't running and stop immediately is true
             if (mouseMovementTimer == null && stopImmediately) {
                 return;
             }
+            //resets mouse, cat, and location labels and recalculates cat's distance to mouse
+            //this is used when a cat has caught a mouse and the user then presses start again
+            //to automatically reset the gamefield
             if (cat.getDistanceToMouse() <= collisionDistance) {
                 controlPanel.resetAndRefreshCatMouseLocation();
                 cat.calculateDistanceToMouse(mouse);
-                return;
             }
+            //main start/pause if statement to toggle between the two states of the game
             if (mouseMovementTimer != null || stopImmediately) {
+                //stops all clocks and sets them to null
                 button.setText("Start");
                 mouseMovementTimer.stop();
                 catMovementTimer.stop();
@@ -144,7 +149,9 @@ public class AnimationPanel extends JPanel {
                 catMovementTimer = null;
                 refreshRateTimer = null;
             } else {
+                //assigns all clocks and starts them
                 button.setText("Pause");
+
                 mouseMovementTimer = new Timer(mousePixSpeed, e -> {
                     mouse.moveOneUnitUpdate();
                     directionInput.setValue(mouse.getTheta());
@@ -154,6 +161,7 @@ public class AnimationPanel extends JPanel {
                     cat.moveOneUnitTowardPoint(mouse.getX(), mouse.getY());
                     distanceBetweenMouseCatLabel.setText(String.format("%.2f", cat.calculateDistanceToMouse(mouse.getX(), mouse.getY())));
 
+                    //stopping logic to stop the game once the cat has caught the mouse
                     if (cat.getDistanceToMouse() <= collisionDistance) {
                         button.setText("Start");
                         mouseMovementTimer.stop();
@@ -166,11 +174,13 @@ public class AnimationPanel extends JPanel {
                     }
                 });
 
+                //refreshes only the gamefield and location inputs
                 refreshRateTimer = new Timer((int) (1000.0/REFRESH_RATE), e -> {
                     gameField.paintImmediately(0, 0, (int) gameField.getSize().getWidth(), (int) gameField.getSize().getHeight());
                     controlPanel.refreshLocationInputs();
                 });
 
+                //finally starts all 3 clocks
                 mouseMovementTimer.start();
                 catMovementTimer.start();
                 refreshRateTimer.start();
@@ -179,9 +189,11 @@ public class AnimationPanel extends JPanel {
     }
 
     /**
-     * Moves {@link AnimationPanel#mouse} across every point on the {@link GameField}.
-     * In the order of bottom, right, top, left, then back to bottom. This movement only occurs if the mouse
-     * is stationary. If the mouse is currently moving then the function call gets voided.
+     * Main game logic method to handle all movement and refresh clocks for the {@link Mouse} and {@link Cat}.
+     * Repetitive method calls toggles the game field state between currently running(clocks active) and not running(clocks inactive)
+     * With the addition of adding some very basic movement AI to the mouse. The mouse will now try to run away from the cat.
+     * The mouse will only pick random directions to move in only if that direction it is not within the quadrant the cat is within.
+     * This very basic AI has the outcome where almost instantly the cat corners the mouse into a corner.
      *
      * @param button JButton to change text on between "Start" and "Pause"
      * @param mousePixelSpeedInput JFormattedTextField representing the speed in pixel/sec to move the mouse
@@ -203,26 +215,28 @@ public class AnimationPanel extends JPanel {
         int catPixSpeed = (int) (1000/((Number) catPixelSpeedInput.getValue()).doubleValue());
         final int[] lastChangeMouseDirection = {0};
         synchronized (this) {
-            //edge case for when you want to reset the field but the cat/mouse aren't moving
+            //ignore method call a timer isn't running and stop immediately is true
             if (mouseMovementTimer == null && stopImmediately) {
                 return;
             }
+            //resets mouse, cat, and location labels and recalculates cat's distance to mouse
+            //this is used when a cat has caught a mouse and the user then presses start again
+            //to automatically reset the gamefield
             if (cat.getDistanceToMouse() <= collisionDistance) {
                 controlPanel.resetAndRefreshCatMouseLocation();
                 cat.calculateDistanceToMouse(mouse);
-                return;
             }
-
+            //main start/pause if statement to toggle between the two states of the game
             if (mouseMovementTimer != null || stopImmediately) {
-                mouseMovementTimer.stop();
-                mouseMovementTimer = null;
-
-                catMovementTimer.stop();
-                catMovementTimer = null;
-
-                refreshRateTimer.stop();
-                refreshRateTimer = null;
+                //stops all clocks and sets them to null
                 button.setText("Start");
+                mouseMovementTimer.stop();
+                catMovementTimer.stop();
+                refreshRateTimer.stop();
+
+                mouseMovementTimer = null;
+                catMovementTimer = null;
+                refreshRateTimer = null;
             } else {
                 button.setText("Pause");
                 Random random = new Random();
@@ -280,14 +294,14 @@ public class AnimationPanel extends JPanel {
                         catMovementTimer = null;
                         refreshRateTimer = null;
                     }
-
                 });
 
-                refreshRateTimer = new Timer((int) (1000.0/120), e -> {
+                refreshRateTimer = new Timer((int) (1000.0/REFRESH_RATE), e -> {
                     gameField.paintImmediately(0, 0, (int) gameField.getSize().getWidth(), (int) gameField.getSize().getHeight());
                     controlPanel.refreshLocationInputs();
                 });
 
+                //finally starts all clocks
                 mouseMovementTimer.start();
                 catMovementTimer.start();
                 refreshRateTimer.start();
@@ -329,7 +343,7 @@ public class AnimationPanel extends JPanel {
             g2d.scale(1, -1);
             g2d.translate(0, -getHeight());
 
-            //only draws the fancy field image if there wasn't errors with loading the image from file
+            //paints the mouse and cat objects
             mouse.paint(g2d);
             cat.paint(g2d);
         }
@@ -344,6 +358,10 @@ class Mouse {
     private double y;
     private double theta;
     private BufferedImage mouseImage;
+
+    /**
+     * Controls whether to flip the image to face right, true, or face left, false.
+     */
     private boolean faceRight = true;
     private AnimationPanel.GameField gameField;
 
@@ -351,6 +369,7 @@ class Mouse {
      *
      * @param x x coordinate on the {@link AnimationPanel.GameField}
      * @param y y coordinate on the {@link AnimationPanel.GameField}
+     * @param theta angle the mouse moves at
      * @param gameField field for the mouse to move around in
      */
     public Mouse(double x, double y, double theta, AnimationPanel.GameField gameField) {
@@ -361,22 +380,24 @@ class Mouse {
 
         try {
             mouseImage = ImageIO.read(getClass().getResourceAsStream("/mouse.png"));
-        } catch (IllegalArgumentException | IOException e) {
+        } catch (IllegalArgumentException | IOException | NullPointerException e) {
             mouseImage = null;
         }
     }
 
     /**
-     * Paints the mouse at it's current coordinates centered on (x, y).
+     * Paints the mouse with either the fancy mouseImage if it was loaded or a simple circle if it wasn't.
+     * Both the fancy image and the circle are centered on the current coordinates of the mouse.
      *
      * @param g2d Graphics object to paint to
      */
     public void paint(Graphics2D g2d) {
-        double radius = 20;
-        Math.round(x- radius/2.0);
+        double radius = 10;
+        Math.round(x - radius/2.0);
         int paintX = Math.toIntExact(Math.round(x - radius / 2.0));
         int paintY = Math.toIntExact(Math.round(y - radius / 2.0));
 
+        //whether or not to paint the mouse with the fancy image or plan circle
         if (mouseImage != null) {
             if (faceRight) {
                 AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
@@ -394,8 +415,8 @@ class Mouse {
             //only used if there was an issue loading the fancy player image
             g2d.fillOval(paintX, paintY, 20, 20);
         }
-        //offset to find center of image
-        g2d.fillOval(paintX, paintY, 10, 10);
+//        //offset to find center of image
+//        g2d.fillOval(paintX, paintY, 10, 10);
     }
 
     /**
@@ -405,6 +426,9 @@ class Mouse {
         x += (Math.cos(Math.toRadians(theta)));
         y += (Math.sin(Math.toRadians(theta)));
 
+        //flips mouseImage if the x coordinate is decreasing
+        //where x is decreasing means mouse faces left
+        //where x is iscreasing means mouse faces right
         if ((Math.cos(Math.toRadians(theta))) <= 0) {
             faceRight = false;
         } else
@@ -456,6 +480,14 @@ class Cat {
      * @param y         y coordinate on the {@link AnimationPanel.GameField}
      * @param gameField field for the mouse to move around in
      */
+
+    /**
+     *
+     * @param x
+     * @param y
+     * @param mouse
+     * @param gameField
+     */
     public Cat(double x, double y, Mouse mouse, AnimationPanel.GameField gameField) {
         this.gameField = gameField;
         this.x = x;
@@ -475,6 +507,8 @@ class Cat {
      * @param g2d Graphics object to paint to
      */
     public void paint(Graphics2D g2d) {
+        //fixes weird error on application startup where the cat doesn't display in correct coordinates
+        //so this runs once on the first ever method call to this function
         if (!hasReset) {
             this.resetCat();
             hasReset = true;
@@ -502,8 +536,8 @@ class Cat {
             //only used if there was an issue loading the fancy player image
             g2d.fillOval(paintX, paintY, 20, 20);
         }
-        //offset to find center of image
-        g2d.fillOval(paintX, paintY, 10, 10);
+//        //offset to find center of image
+//        g2d.fillOval(paintX, paintY, 10, 10);
     }
 
     /**
@@ -515,12 +549,21 @@ class Cat {
         x += (mouseX - x)/length;
         y += (mouseY - y)/length;
 
+        //flips the cat if the difference between mouseX and catX is more than 15
+        //has the effect of the cat always facing toward the mouse
         if (mouseX - x >= 15)
             faceRight = true;
         else
             faceRight = false;
     }
 
+    /**
+     * Calculates the distance between the mouse and cat
+     *
+     * @param mouseX mouse coordinates on the x axis
+     * @param mouseY mouse coordinates on the y axis
+     * @return distance between Cat and Mouse in double
+     */
     public double calculateDistanceToMouse(double mouseX, double mouseY) {
         distanceToMouse = Point2D.distance(x, y, mouseX, mouseY);
         return distanceToMouse;
