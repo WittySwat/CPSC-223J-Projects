@@ -32,6 +32,7 @@ public class Main {
             public void run() {
                 applicationFrame[0] = new ApplicationFrame("Program 4");
                 applicationFrame[0].getControlPanel().resetAndRefreshCatMouseLocation();
+                System.out.println(applicationFrame[0].getSize());
             }
         });
     }

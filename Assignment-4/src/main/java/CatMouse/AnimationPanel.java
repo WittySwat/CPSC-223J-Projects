@@ -61,7 +61,7 @@ public class AnimationPanel extends JPanel {
      */
     private Timer refreshRateTimer = null;
 
-    private final int CANVAS_WIDTH = 1000;
+    private final int CANVAS_WIDTH = 1900;
     private final int CANVAS_HEIGHT = 750;
 
     private final int X_CENTER = CANVAS_WIDTH/2;
@@ -70,12 +70,12 @@ public class AnimationPanel extends JPanel {
     /**
      * Number of times per second the {@link GameField} gets refreshed.
      */
-    private final int REFRESH_RATE = 120;
+    private final int REFRESH_RATE = 30;
 
     /**
-     * The distance when a cat has sucessfully caught the mouse.
+     * The distance when a cat has successfully caught the mouse.
      */
-    private final int collisionDistance = 50;
+    private final int collisionDistance = 2;
 
     /**
      * Creates an DiamondAnimation.AnimationPanel with preset width and height equal to {@link #CANVAS_WIDTH} and {@link #CANVAS_HEIGHT}
@@ -153,14 +153,13 @@ public class AnimationPanel extends JPanel {
                 button.setText("Pause");
 
                 mouseMovementTimer = new Timer(mousePixSpeed, e -> {
+                    cat.updateDistanceToMouse(mouse);
                     mouse.moveOneUnitUpdate();
                     directionInput.setValue(mouse.getTheta());
                 });
 
                 catMovementTimer = new Timer(catPixSpeed, e -> {
-                    cat.moveOneUnitTowardPoint(mouse.getX(), mouse.getY());
-                    distanceBetweenMouseCatLabel.setText(String.format("%.2f", cat.calculateDistanceToMouse(mouse.getX(), mouse.getY())));
-
+                    cat.updateDistanceToMouse(mouse);
                     //stopping logic to stop the game once the cat has caught the mouse
                     if (cat.getDistanceToMouse() <= collisionDistance) {
                         button.setText("Start");
@@ -172,6 +171,8 @@ public class AnimationPanel extends JPanel {
                         catMovementTimer = null;
                         refreshRateTimer = null;
                     }
+                    cat.moveOneUnitTowardPoint(mouse.getX(), mouse.getY());
+                    distanceBetweenMouseCatLabel.setText(String.format("%.2f", cat.calculateDistanceToMouse(mouse.getX(), mouse.getY())));
                 });
 
                 //refreshes only the gamefield and location inputs
@@ -281,9 +282,6 @@ public class AnimationPanel extends JPanel {
                 });
 
                 catMovementTimer = new Timer(catPixSpeed, e -> {
-                    cat.moveOneUnitTowardPoint(mouse.getX(), mouse.getY());
-                    distanceBetweenMouseCatLabel.setText(String.format("%.2f", cat.calculateDistanceToMouse(mouse.getX(), mouse.getY())));
-
                     if (cat.getDistanceToMouse() <= collisionDistance) {
                         button.setText("Start");
                         mouseMovementTimer.stop();
@@ -294,6 +292,8 @@ public class AnimationPanel extends JPanel {
                         catMovementTimer = null;
                         refreshRateTimer = null;
                     }
+                    cat.moveOneUnitTowardPoint(mouse.getX(), mouse.getY());
+                    distanceBetweenMouseCatLabel.setText(String.format("%.2f", cat.calculateDistanceToMouse(mouse.getX(), mouse.getY())));
                 });
 
                 refreshRateTimer = new Timer((int) (1000.0/REFRESH_RATE), e -> {
@@ -366,7 +366,6 @@ class Mouse {
     private AnimationPanel.GameField gameField;
 
     /**
-     *
      * @param x x coordinate on the {@link AnimationPanel.GameField}
      * @param y y coordinate on the {@link AnimationPanel.GameField}
      * @param theta angle the mouse moves at
@@ -379,8 +378,9 @@ class Mouse {
         this.gameField = gameField;
 
         try {
-            mouseImage = ImageIO.read(getClass().getResourceAsStream("/mouse.png"));
+            mouseImage = ImageIO.read(getClass().getResourceAsStream("/mouse2.png"));
         } catch (IllegalArgumentException | IOException | NullPointerException e) {
+            System.out.println("Mouse image could not be loaded reverting to oval shape.");
             mouseImage = null;
         }
     }
@@ -413,7 +413,7 @@ class Mouse {
         else {
             //paints an oval representing the player centered on the current (x,y)
             //only used if there was an issue loading the fancy player image
-            g2d.fillOval(paintX, paintY, 20, 20);
+            g2d.fillOval(paintX, paintY, (int) radius, (int) radius);
         }
 //        //offset to find center of image
 //        g2d.fillOval(paintX, paintY, 10, 10);
@@ -495,8 +495,9 @@ class Cat {
         distanceToMouse = calculateDistanceToMouse(mouse);
 
         try {
-            catImage = ImageIO.read(getClass().getResourceAsStream("/cat.png"));
+            catImage = ImageIO.read(getClass().getResourceAsStream("/cat2.png"));
         } catch (IllegalArgumentException | IOException | NullPointerException e ) {
+            System.out.println("Cat image could not be loaded reverting to oval shape.");
             catImage = null;
         }
     }
@@ -534,7 +535,7 @@ class Cat {
         else {
             //paints an oval representing the player centered on the current (x,y)
             //only used if there was an issue loading the fancy player image
-            g2d.fillOval(paintX, paintY, 20, 20);
+            g2d.fillOval(paintX, paintY, (int) radius, (int) radius);
         }
 //        //offset to find center of image
 //        g2d.fillOval(paintX, paintY, 10, 10);
@@ -565,13 +566,18 @@ class Cat {
      * @return distance between Cat and Mouse in double
      */
     public double calculateDistanceToMouse(double mouseX, double mouseY) {
-        distanceToMouse = Point2D.distance(x, y, mouseX, mouseY);
+        distanceToMouse = Point2D.distance(x, y, mouseX, mouseY) - 50;
         return distanceToMouse;
     }
 
     public double calculateDistanceToMouse(Mouse mouse) {
-        distanceToMouse = Point2D.distance(x, y, mouse.getX(), mouse.getY());
+
+        distanceToMouse = Point2D.distance(x, y, mouse.getX(), mouse.getY()) - 50;
         return distanceToMouse;
+    }
+
+    public void updateDistanceToMouse(Mouse mouse) {
+        distanceToMouse = Point2D.distance(x, y, mouse.getX(), mouse.getY()) - 50;
     }
 
     public void resetCat() {

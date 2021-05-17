@@ -39,8 +39,6 @@ public class ControlPanel extends JPanel {
     private JLabel distanceBetweenMouseCatLabel;
     private final NumberFormat integerInstance = NumberFormat.getIntegerInstance();
     private JButton startPauseButton;
-    private int CANVAS_WIDTH = 1000;
-    private int CANVAS_HEIGHT = 1000;
 
     public ControlPanel(AnimationPanel animationPanel) {
         //Calls super() and sets size constraints, color, and border
@@ -48,7 +46,7 @@ public class ControlPanel extends JPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
         this.animationPanel = animationPanel;
         this.setBackground(new Color(255, 105, 97));
-        this.setPreferredSize(new Dimension(1000, 200));
+        this.setPreferredSize(new Dimension(1900, 200));
         this.setBorder(BorderFactory.createEmptyBorder(25,10,25,10));
 
         createAndAddButtons();
@@ -75,7 +73,7 @@ public class ControlPanel extends JPanel {
 
     private void createAndAddButtons() {
         startPauseButton = new JButton("Start");
-        startPauseButton.addActionListener(startPauseButtonLisenter());
+        startPauseButton.addActionListener(startPauseButtonListener());
         startPauseButton.setPreferredSize(new Dimension(75, 35));
 
         JButton quitButton = new JButton("Quit");
@@ -143,7 +141,7 @@ public class ControlPanel extends JPanel {
 
         this.add(inputControls);
 
-        this.add(Box.createRigidArea(new Dimension(15,0)));
+        this.add(Box.createRigidArea(new Dimension(100,0)));
 
         JPanel distanceBetweenPanel = new JPanel();
         distanceBetweenPanel.setLayout(new BoxLayout(distanceBetweenPanel, BoxLayout.Y_AXIS));
@@ -166,7 +164,7 @@ public class ControlPanel extends JPanel {
 
         this.add(distanceBetweenPanel);
 
-        this.add(Box.createRigidArea(new Dimension(15,0)));
+        this.add(Box.createRigidArea(new Dimension(650,0)));
 
 
 //----------------------------------------------------------------------------//
@@ -271,16 +269,16 @@ public class ControlPanel extends JPanel {
      *
      * @return ActionListener
      */
-    private ActionListener startPauseButtonLisenter() {
+    private ActionListener startPauseButtonListener() {
         return actionEvent -> {
             AnimationPanel.GameField gameField = animationPanel.getGameField();
             if (((Number) mousePixelSpeedInput.getValue()).intValue() <= 0) {
-                JOptionPane.showMessageDialog(animationPanel, "Refresh Rate input cannot be negative or zero");
+                JOptionPane.showMessageDialog(animationPanel, "Mouse Pixel Speed input cannot be negative or zero");
                 return;
             }
 
             if (((Number) catPixelSpeedInput.getValue()).intValue() <= 0) {
-                JOptionPane.showMessageDialog(animationPanel, "Pixel Speed input cannot be negative or zero");
+                JOptionPane.showMessageDialog(animationPanel, "Cat Pixel Speed input cannot be negative or zero");
                 return;
             }
 

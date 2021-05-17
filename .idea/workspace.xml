@@ -22,8 +22,16 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a606321-75cd-47ef-a678-73d4e13bf7f4" name="Default Changelist" comment="">
+    <list default="true" id="8a606321-75cd-47ef-a678-73d4e13bf7f4" name="Default Changelist" comment="idea folder2">
+      <change afterPath="$PROJECT_DIR$/Assignment-5/src/main/java/SineWave/SinePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment-4/src/main/java/CatMouse/AnimationPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment-4/src/main/java/CatMouse/AnimationPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment-4/src/main/java/CatMouse/ApplicationFrame.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment-4/src/main/java/CatMouse/ApplicationFrame.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment-4/src/main/java/CatMouse/ControlPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment-4/src/main/java/CatMouse/ControlPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment-4/src/main/java/CatMouse/InfoPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment-4/src/main/java/CatMouse/InfoPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assignment-4/src/main/java/CatMouse/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment-4/src/main/java/CatMouse/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -153,7 +161,7 @@
       <module name="CPSC-223J-Projects.Assignment-3.main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="CatMouse.*" />
+          <option name="PATTERN" value="SineWave.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -166,7 +174,20 @@
       <module name="CPSC-223J-Projects.Assignment-4.main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="CatMouse.*" />
+          <option name="PATTERN" value="SineWave.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Assignment 5" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="SineWave.Main" />
+      <module name="CPSC-223J-Projects.Assignment-5.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="SineWave.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -242,6 +263,7 @@
       <item itemvalue="Application.Assignment 2" />
       <item itemvalue="Application.Assignment 3" />
       <item itemvalue="Application.Assignment 4" />
+      <item itemvalue="Application.Assignment 5" />
       <item itemvalue="Gradle.CPSC-223J-Projects:Assignment-1 [jar]" />
       <item itemvalue="Gradle.CPSC-223J-Projects:Assignment-4 [buildEnvironment]" />
       <item itemvalue="Gradle.CPSC-223J-Projects:Assignment-4 [help]" />
