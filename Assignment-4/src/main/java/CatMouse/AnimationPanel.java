@@ -378,7 +378,7 @@ class Mouse {
         this.gameField = gameField;
 
         try {
-            mouseImage = ImageIO.read(getClass().getResourceAsStream("/mouse2.png"));
+            mouseImage = ImageIO.read(getClass().getResourceAsStream("/mouse.png"));
         } catch (IllegalArgumentException | IOException | NullPointerException e) {
             System.out.println("Mouse image could not be loaded reverting to oval shape.");
             mouseImage = null;
@@ -495,7 +495,7 @@ class Cat {
         distanceToMouse = calculateDistanceToMouse(mouse);
 
         try {
-            catImage = ImageIO.read(getClass().getResourceAsStream("/cat2.png"));
+            catImage = ImageIO.read(getClass().getResourceAsStream("/cat.png"));
         } catch (IllegalArgumentException | IOException | NullPointerException e ) {
             System.out.println("Cat image could not be loaded reverting to oval shape.");
             catImage = null;
@@ -571,7 +571,6 @@ class Cat {
     }
 
     public double calculateDistanceToMouse(Mouse mouse) {
-
         distanceToMouse = Point2D.distance(x, y, mouse.getX(), mouse.getY()) - 50;
         return distanceToMouse;
     }
