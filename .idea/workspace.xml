@@ -22,8 +22,16 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a606321-75cd-47ef-a678-73d4e13bf7f4" name="Default Changelist" comment="final submission?">
-      <change beforePath="$PROJECT_DIR$/Assignment-4/src/main/java/CatMouse/AnimationPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Assignment-4/src/main/java/CatMouse/AnimationPanel.java" afterDir="false" />
+    <list default="true" id="8a606321-75cd-47ef-a678-73d4e13bf7f4" name="Default Changelist" comment="unassigned assignment 5">
+      <change afterPath="$PROJECT_DIR$/Final/src/main/java/EarthSun/ControlPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/DiamondAnimation/ApplicationFrame.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/DiamondAnimation/ApplicationFrame.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/DiamondAnimation/ControlPanel.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/DiamondAnimation/ControlPanel.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/PayrollSystem/ApplicationFrame.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/PayrollSystem/ApplicationFrame.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/PayrollSystem/InputPanel.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/PayrollSystem/InputPanel.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docs/index-files/index-3.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index-files/index-3.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -104,6 +112,12 @@
     <option name="showLigatures" value="true" />
   </component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\WittySwat\Documents\CPSC-223J-Projects\Assignment-4" />
+      <recent name="C:\Users\WittySwat\Documents\CPSC-223J-Projects\Assignment-3\src\main\java\RicochetBall" />
+      <recent name="C:\Users\WittySwat\Documents\CPSC-223J-Projects\Test-1" />
+      <recent name="C:\Users\WittySwat\Documents\CPSC-223J-Projects\Test-1\src" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\WittySwat\Documents\CPSC-223J-Projects\Test-1\src\main\java\TriangleComputations" />
       <recent name="C:\Users\WittySwat\Documents\CPSC-223J-Projects\Test-1\src\main\java\Triangle Computations" />
@@ -112,16 +126,11 @@
       <recent name="" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="EarthSun" />
       <recent name="DiamondAnimation" />
     </key>
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\WittySwat\Documents\CPSC-223J-Projects\Assignment-4" />
-      <recent name="C:\Users\WittySwat\Documents\CPSC-223J-Projects\Assignment-3\src\main\java\RicochetBall" />
-      <recent name="C:\Users\WittySwat\Documents\CPSC-223J-Projects\Test-1" />
-      <recent name="C:\Users\WittySwat\Documents\CPSC-223J-Projects\Test-1\src" />
-    </key>
   </component>
-  <component name="RunManager" selected="Application.Assignment 4">
+  <component name="RunManager" selected="Application.Final">
     <configuration name="Assignment 1" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="PayrollSystem.Main" />
       <module name="CPSC-223J-Projects.Assignment-1.main" />
@@ -153,7 +162,7 @@
       <module name="CPSC-223J-Projects.Assignment-3.main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="SineWave.*" />
+          <option name="PATTERN" value="EarthSun.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -166,7 +175,7 @@
       <module name="CPSC-223J-Projects.Assignment-4.main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="SineWave.*" />
+          <option name="PATTERN" value="EarthSun.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -179,7 +188,20 @@
       <module name="CPSC-223J-Projects.Assignment-5.main" />
       <extension name="coverage">
         <pattern>
-          <option name="PATTERN" value="SineWave.*" />
+          <option name="PATTERN" value="EarthSun.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Final" type="Application" factoryName="Application">
+      <option name="MAIN_CLASS_NAME" value="EarthSun.Main" />
+      <module name="CPSC-223J-Projects.Final.main" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="EarthSun.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -256,6 +278,7 @@
       <item itemvalue="Application.Assignment 3" />
       <item itemvalue="Application.Assignment 4" />
       <item itemvalue="Application.Assignment 5" />
+      <item itemvalue="Application.Final" />
       <item itemvalue="Gradle.CPSC-223J-Projects:Assignment-1 [jar]" />
       <item itemvalue="Gradle.CPSC-223J-Projects:Assignment-4 [buildEnvironment]" />
       <item itemvalue="Gradle.CPSC-223J-Projects:Assignment-4 [help]" />
@@ -469,7 +492,21 @@
       <option name="project" value="LOCAL" />
       <updated>1621210881706</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="final">
+      <created>1621210961571</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1621210961571</updated>
+    </task>
+    <task id="LOCAL-00029" summary="unassigned assignment 5">
+      <created>1621211002516</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1621211002516</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -512,8 +549,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="DiamondAnimation" />
-    <MESSAGE value="Massive code cleanup" />
     <MESSAGE value="working timer" />
     <MESSAGE value="add images to UI" />
     <MESSAGE value="javadoc and code commenting pass" />
@@ -537,7 +572,9 @@
     <MESSAGE value="commenting" />
     <MESSAGE value="more commenting" />
     <MESSAGE value="final submission?" />
-    <option name="LAST_COMMIT_MESSAGE" value="final submission?" />
+    <MESSAGE value="final" />
+    <MESSAGE value="unassigned assignment 5" />
+    <option name="LAST_COMMIT_MESSAGE" value="unassigned assignment 5" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
