@@ -22,16 +22,10 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a606321-75cd-47ef-a678-73d4e13bf7f4" name="Default Changelist" comment="unassigned assignment 5">
-      <change afterPath="$PROJECT_DIR$/Final/src/main/java/EarthSun/ControlPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+    <list default="true" id="8a606321-75cd-47ef-a678-73d4e13bf7f4" name="Default Changelist" comment="final exam">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/DiamondAnimation/ApplicationFrame.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/DiamondAnimation/ApplicationFrame.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/DiamondAnimation/ControlPanel.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/DiamondAnimation/ControlPanel.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/PayrollSystem/ApplicationFrame.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/PayrollSystem/ApplicationFrame.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/PayrollSystem/InputPanel.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/PayrollSystem/InputPanel.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docs/index-files/index-3.html" beforeDir="false" afterPath="$PROJECT_DIR$/docs/index-files/index-3.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Final/src/main/java/EarthSun/AnimationPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Final/src/main/java/EarthSun/AnimationPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Final/src/main/java/EarthSun/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/Final/src/main/java/EarthSun/package-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -506,7 +500,14 @@
       <option name="project" value="LOCAL" />
       <updated>1621211002516</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="final exam">
+      <created>1621467227493</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1621467227493</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -549,7 +550,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="working timer" />
     <MESSAGE value="add images to UI" />
     <MESSAGE value="javadoc and code commenting pass" />
     <MESSAGE value="javadoc webpage update" />
@@ -574,7 +574,8 @@
     <MESSAGE value="final submission?" />
     <MESSAGE value="final" />
     <MESSAGE value="unassigned assignment 5" />
-    <option name="LAST_COMMIT_MESSAGE" value="unassigned assignment 5" />
+    <MESSAGE value="final exam" />
+    <option name="LAST_COMMIT_MESSAGE" value="final exam" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>

@@ -16,3 +16,6 @@
  * A program that a player moves around a baseball diamond with given speed.
  */
 package EarthSun;
+
+import java.awt.*;
+

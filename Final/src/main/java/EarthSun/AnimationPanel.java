@@ -48,6 +48,10 @@ public class AnimationPanel extends JPanel {
 
     private final Moon moon;
 
+    private final Mercury mercury;
+
+    private final Venus venus;
+
     /**
      * Timer that controls the sun's movement inside
      */
@@ -56,6 +60,10 @@ public class AnimationPanel extends JPanel {
     private Timer marsMovementTimer = null;
 
     private Timer moonMovementTimer = null;
+
+    private Timer mercuryMovementTimer = null;
+
+    private Timer venusMovementTimer = null;
 
     /**
      * Timer that controls when the {@link GameField} is repainted. Controlled by {@link #REFRESH_RATE} in the unit of Hertz
@@ -88,6 +96,8 @@ public class AnimationPanel extends JPanel {
         earth = new Earth(X_CENTER + 100, Y_CENTER, gameField, sun);
         mars = new Mars(X_CENTER + 250, Y_CENTER, gameField, sun);
         moon = new Moon(X_CENTER + 100, Y_CENTER, gameField, earth);
+        mercury = new Mercury(X_CENTER + 250, Y_CENTER, gameField, sun);
+        venus = new Venus(X_CENTER + 250, Y_CENTER, gameField, sun);
 
         this.setLayout(new GridLayout());
     }
@@ -102,7 +112,7 @@ public class AnimationPanel extends JPanel {
                                       JLabel earthYLocationLabel,
                           boolean stopImmediately) {
         int earthPixelSpeed = (int) (1000/((Number) earthPixelSpeedInput.getValue()).doubleValue());
-
+        System.out.println(((Number) earthPixelSpeedInput.getValue()).doubleValue());
         synchronized (this) {
             //ignore method call a timer isn't running and stop immediately is true
             if (earthMovementTimer == null && stopImmediately) {
@@ -116,11 +126,15 @@ public class AnimationPanel extends JPanel {
                 earthMovementTimer.stop();
                 marsMovementTimer.stop();
                 moonMovementTimer.stop();
+                mercuryMovementTimer.stop();
+                venusMovementTimer.stop();
                 refreshRateTimer.stop();
 
                 earthMovementTimer = null;
                 marsMovementTimer = null;
                 moonMovementTimer = null;
+                mercuryMovementTimer = null;
+                venusMovementTimer = null;
                 refreshRateTimer = null;
             } else {
                 //assigns all clocks and starts them
@@ -132,12 +146,20 @@ public class AnimationPanel extends JPanel {
                     earthYLocationLabel.setText(String.format("%.2f", earth.getY()));
                 });
 
-                marsMovementTimer = new Timer(earthPixelSpeed * 2, e -> {
+                marsMovementTimer = new Timer(earthPixelSpeed, e -> {
                     mars.moveOneUnitUpdate();
                 });
 
                 moonMovementTimer = new Timer(earthPixelSpeed/2, e -> {
                     moon.moveOneUnitUpdate();
+                });
+
+                mercuryMovementTimer = new Timer(earthPixelSpeed, e -> {
+                    mercury.moveOneUnitUpdate();
+                });
+
+                venusMovementTimer = new Timer(earthPixelSpeed, e -> {
+                    venus.moveOneUnitUpdate();
                 });
 
                 //refreshes only the gamefield and location inputs
@@ -149,6 +171,8 @@ public class AnimationPanel extends JPanel {
                 earthMovementTimer.start();
                 marsMovementTimer.start();
                 moonMovementTimer.start();
+                mercuryMovementTimer.start();
+                venusMovementTimer.start();
                 refreshRateTimer.start();
             }
         }
@@ -159,6 +183,8 @@ public class AnimationPanel extends JPanel {
         earth.reset();
         mars.reset();
         moon.reset();
+        mercury.reset();
+        venus.reset();
 
         this.paintImmediately(0,0, this.getWidth(), this.getHeight());
     }
@@ -194,6 +220,8 @@ public class AnimationPanel extends JPanel {
             earth.paint(g2d);
             mars.paint(g2d);
             moon.paint(g2d);
+            mercury.paint(g2d);
+            venus.paint(g2d);
         }
     }
 }
@@ -256,7 +284,7 @@ class Earth {
     private AnimationPanel.GameField gameField;
     private boolean hasReset = false;
     private double theta = 0;
-    private final double orbitRadius = 100;
+    private final double orbitRadius = 185;
     private final Sun sun;
 
     /**
@@ -292,7 +320,7 @@ class Earth {
         //fixes weird error on application startup where the earth doesn't display in correct coordinates
         //so this runs once on the first ever method call to this function
 
-        double radius = 25;
+        double radius = 30;
         Math.round(x- radius/2.0);
         int paintX = Math.toIntExact(Math.round(x - radius / 2.0));
         int paintY = Math.toIntExact(Math.round(y - radius / 2.0));
@@ -307,7 +335,7 @@ class Earth {
     public void moveOneUnitUpdate() {
         x = sun.getX() + orbitRadius * Math.cos(Math.toRadians(theta));
         y = sun.getY() + orbitRadius * Math.sin(Math.toRadians(theta));
-        theta += 1.0;
+        theta += 0.58;
     }
 
     public double getX() {
@@ -334,7 +362,7 @@ class Mars {
     private AnimationPanel.GameField gameField;
     private boolean hasReset = false;
     private double theta = 0;
-    private final double orbitRadius = 225;
+    private final double orbitRadius = 300;
     private final Sun sun;
 
     /**
@@ -370,7 +398,7 @@ class Mars {
         //fixes weird error on application startup where the earth doesn't display in correct coordinates
         //so this runs once on the first ever method call to this function
 
-        double radius = 25;
+        double radius = 22;
         Math.round(x- radius/2.0);
         int paintX = Math.toIntExact(Math.round(x - radius / 2.0));
         int paintY = Math.toIntExact(Math.round(y - radius / 2.0));
@@ -481,4 +509,157 @@ class Moon {
 
 }
 
+class Mercury {
+    private double x;
+    private double y;
+    private AnimationPanel.GameField gameField;
+    private boolean hasReset = false;
+    private double theta = 0;
+    private final double orbitRadius = 50;
+    private final Sun sun;
+
+    /**
+     * @param x         x coordinate on the {@link AnimationPanel.GameField}
+     * @param y         y coordinate on the {@link AnimationPanel.GameField}
+     * @param gameField field for the sun to move around in
+     */
+
+    /**
+     *
+     * @param x
+     * @param y
+     * @param gameField
+     */
+    public Mercury(double x, double y, AnimationPanel.GameField gameField, Sun sun) {
+        this.gameField = gameField;
+        this.x = x;
+        this.y = y;
+        this.sun = sun;
+    }
+
+    /**
+     * Paints the sun at it's current coordinates centered on (x, y).
+     *
+     * @param g2d Graphics object to paint to
+     */
+    public void paint(Graphics2D g2d) {
+        if (!hasReset) {
+            x = sun.getX() + orbitRadius * Math.cos(Math.toRadians(theta));
+            y = sun.getY() + orbitRadius * Math.sin(Math.toRadians(theta));
+            hasReset = true;
+        }
+        //fixes weird error on application startup where the earth doesn't display in correct coordinates
+        //so this runs once on the first ever method call to this function
+
+        double radius = 15;
+        Math.round(x- radius/2.0);
+        int paintX = Math.toIntExact(Math.round(x - radius / 2.0));
+        int paintY = Math.toIntExact(Math.round(y - radius / 2.0));
+
+        g2d.setColor(Color.PINK);
+        g2d.fillOval(paintX, paintY, (int) radius, (int) radius);
+
+    }
+
+    /**
+     * Moves the sun one unit in the direction calculated by it's current theta member.
+     */
+    public void moveOneUnitUpdate() {
+        x = sun.getX() + orbitRadius * Math.cos(Math.toRadians(theta));
+        y = sun.getY() + orbitRadius * Math.sin(Math.toRadians(theta));
+        theta += 1.5;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void reset() {
+        x = sun.getX() + orbitRadius * Math.cos(Math.toRadians(0));
+        y = sun.getY() + orbitRadius * Math.sin(Math.toRadians(0));
+        theta = 0;
+    }
+
+}
+
+class Venus {
+    private double x;
+    private double y;
+    private AnimationPanel.GameField gameField;
+    private boolean hasReset = false;
+    private double theta = 0;
+    private final double orbitRadius = 120;
+    private final Sun sun;
+
+    /**
+     * @param x         x coordinate on the {@link AnimationPanel.GameField}
+     * @param y         y coordinate on the {@link AnimationPanel.GameField}
+     * @param gameField field for the sun to move around in
+     */
+
+    /**
+     *
+     * @param x
+     * @param y
+     * @param gameField
+     */
+    public Venus(double x, double y, AnimationPanel.GameField gameField, Sun sun) {
+        this.gameField = gameField;
+        this.x = x;
+        this.y = y;
+        this.sun = sun;
+    }
+
+    /**
+     * Paints the sun at it's current coordinates centered on (x, y).
+     *
+     * @param g2d Graphics object to paint to
+     */
+    public void paint(Graphics2D g2d) {
+        if (!hasReset) {
+            x = sun.getX() + orbitRadius * Math.cos(Math.toRadians(theta));
+            y = sun.getY() + orbitRadius * Math.sin(Math.toRadians(theta));
+            hasReset = true;
+        }
+        //fixes weird error on application startup where the earth doesn't display in correct coordinates
+        //so this runs once on the first ever method call to this function
+
+        double radius = 20;
+        Math.round(x- radius/2.0);
+        int paintX = Math.toIntExact(Math.round(x - radius / 2.0));
+        int paintY = Math.toIntExact(Math.round(y - radius / 2.0));
+
+        g2d.setColor(Color.CYAN);
+        g2d.fillOval(paintX, paintY, (int) radius, (int) radius);
+
+    }
+
+    /**
+     * Moves the sun one unit in the direction calculated by it's current theta member.
+     */
+    public void moveOneUnitUpdate() {
+        x = sun.getX() + orbitRadius * Math.cos(Math.toRadians(theta));
+        y = sun.getY() + orbitRadius * Math.sin(Math.toRadians(theta));
+        theta += 0.75;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void reset() {
+        x = sun.getX() + orbitRadius * Math.cos(Math.toRadians(0));
+        y = sun.getY() + orbitRadius * Math.sin(Math.toRadians(0));
+        theta = 0;
+    }
+
+}
 
