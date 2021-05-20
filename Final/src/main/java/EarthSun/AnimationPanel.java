@@ -21,6 +21,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * Represents the main visual display of the {@link GameField} and it's objects {@link Sun} {@link Mars}
@@ -52,6 +53,10 @@ public class AnimationPanel extends JPanel {
 
     private final Venus venus;
 
+    private final int numAstroids = 50;
+
+    private final Astroid[] astroids = new Astroid[numAstroids];
+
     /**
      * Timer that controls the sun's movement inside
      */
@@ -64,6 +69,8 @@ public class AnimationPanel extends JPanel {
     private Timer mercuryMovementTimer = null;
 
     private Timer venusMovementTimer = null;
+
+    private Timer astroidMovementTimer = null;
 
     /**
      * Timer that controls when the {@link GameField} is repainted. Controlled by {@link #REFRESH_RATE} in the unit of Hertz
@@ -99,6 +106,9 @@ public class AnimationPanel extends JPanel {
         mercury = new Mercury(X_CENTER + 250, Y_CENTER, gameField, sun);
         venus = new Venus(X_CENTER + 250, Y_CENTER, gameField, sun);
 
+        for (int i = 0; i < numAstroids; i++) {
+            astroids[i] = new Astroid(X_CENTER + 250, Y_CENTER, gameField, sun);
+        }
         this.setLayout(new GridLayout());
     }
 
@@ -112,7 +122,6 @@ public class AnimationPanel extends JPanel {
                                       JLabel earthYLocationLabel,
                           boolean stopImmediately) {
         int earthPixelSpeed = (int) (1000/((Number) earthPixelSpeedInput.getValue()).doubleValue());
-        System.out.println(((Number) earthPixelSpeedInput.getValue()).doubleValue());
         synchronized (this) {
             //ignore method call a timer isn't running and stop immediately is true
             if (earthMovementTimer == null && stopImmediately) {
@@ -128,6 +137,7 @@ public class AnimationPanel extends JPanel {
                 moonMovementTimer.stop();
                 mercuryMovementTimer.stop();
                 venusMovementTimer.stop();
+                astroidMovementTimer.stop();
                 refreshRateTimer.stop();
 
                 earthMovementTimer = null;
@@ -135,6 +145,7 @@ public class AnimationPanel extends JPanel {
                 moonMovementTimer = null;
                 mercuryMovementTimer = null;
                 venusMovementTimer = null;
+                astroidMovementTimer = null;
                 refreshRateTimer = null;
             } else {
                 //assigns all clocks and starts them
@@ -162,6 +173,12 @@ public class AnimationPanel extends JPanel {
                     venus.moveOneUnitUpdate();
                 });
 
+                astroidMovementTimer = new Timer(earthPixelSpeed, e -> {
+                    for (Astroid astroid : astroids) {
+                        astroid.moveOneUnitUpdate();
+                    }
+                });
+
                 //refreshes only the gamefield and location inputs
                 refreshRateTimer = new Timer((int) (1000.0/REFRESH_RATE), e -> {
                     gameField.paintImmediately(0, 0, (int) gameField.getSize().getWidth(), (int) gameField.getSize().getHeight());
@@ -173,6 +190,7 @@ public class AnimationPanel extends JPanel {
                 moonMovementTimer.start();
                 mercuryMovementTimer.start();
                 venusMovementTimer.start();
+                astroidMovementTimer.start();
                 refreshRateTimer.start();
             }
         }
@@ -185,6 +203,9 @@ public class AnimationPanel extends JPanel {
         moon.reset();
         mercury.reset();
         venus.reset();
+        for (Astroid astroid : astroids) {
+            astroid.reset();
+        }
 
         this.paintImmediately(0,0, this.getWidth(), this.getHeight());
     }
@@ -222,6 +243,9 @@ public class AnimationPanel extends JPanel {
             moon.paint(g2d);
             mercury.paint(g2d);
             venus.paint(g2d);
+            for (Astroid astroid : astroids) {
+                astroid.paint(g2d);
+            }
         }
     }
 }
@@ -660,6 +684,85 @@ class Venus {
         y = sun.getY() + orbitRadius * Math.sin(Math.toRadians(0));
         theta = 0;
     }
+}
 
+class Astroid {
+    private double x;
+    private double y;
+    private AnimationPanel.GameField gameField;
+    private boolean hasReset = false;
+    private double theta = 0;
+    private final double orbitRadius;
+    private final Sun sun;
+    private final double radius;
+    private final double delta_t;
+
+    /**
+     * @param x         x coordinate on the {@link AnimationPanel.GameField}
+     * @param y         y coordinate on the {@link AnimationPanel.GameField}
+     * @param gameField field for the sun to move around in
+     */
+
+    /**
+     *
+     * @param x
+     * @param y
+     * @param gameField
+     */
+    public Astroid(double x, double y, AnimationPanel.GameField gameField, Sun sun) {
+        this.gameField = gameField;
+        this.x = x;
+        this.y = y;
+        this.sun = sun;
+
+        delta_t = ThreadLocalRandom.current().nextDouble(0.3, 1.0 + 1);
+        orbitRadius = ThreadLocalRandom.current().nextInt(215, 285 + 1);
+        radius = ThreadLocalRandom.current().nextInt(5, 10 + 1);
+    }
+
+    /**
+     * Paints the sun at it's current coordinates centered on (x, y).
+     *
+     * @param g2d Graphics object to paint to
+     */
+    public void paint(Graphics2D g2d) {
+        if (!hasReset) {
+            x = sun.getX() + orbitRadius * Math.cos(Math.toRadians(theta));
+            y = sun.getY() + orbitRadius * Math.sin(Math.toRadians(theta));
+            hasReset = true;
+        }
+        //fixes weird error on application startup where the earth doesn't display in correct coordinates
+        //so this runs once on the first ever method call to this function
+        Math.round(x- radius/2.0);
+        int paintX = Math.toIntExact(Math.round(x - radius / 2.0));
+        int paintY = Math.toIntExact(Math.round(y - radius / 2.0));
+
+        g2d.setColor(Color.BLACK);
+        g2d.fillOval(paintX, paintY, (int) radius, (int) radius);
+
+    }
+
+    /**
+     * Moves the sun one unit in the direction calculated by it's current theta member.
+     */
+    public void moveOneUnitUpdate() {
+        x = sun.getX() + orbitRadius * Math.cos(Math.toRadians(theta));
+        y = sun.getY() + orbitRadius * Math.sin(Math.toRadians(theta));
+        theta += delta_t;
+    }
+
+    public double getX() {
+        return x;
+    }
+
+    public double getY() {
+        return y;
+    }
+
+    public void reset() {
+        x = sun.getX() + orbitRadius * Math.cos(Math.toRadians(0));
+        y = sun.getY() + orbitRadius * Math.sin(Math.toRadians(0));
+        theta = 0;
+    }
 }
 

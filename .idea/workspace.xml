@@ -22,10 +22,9 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8a606321-75cd-47ef-a678-73d4e13bf7f4" name="Default Changelist" comment="final exam">
+    <list default="true" id="8a606321-75cd-47ef-a678-73d4e13bf7f4" name="Default Changelist" comment="final2 ty">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Final/src/main/java/EarthSun/AnimationPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/Final/src/main/java/EarthSun/AnimationPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Final/src/main/java/EarthSun/package-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/Final/src/main/java/EarthSun/package-info.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -507,7 +506,14 @@
       <option name="project" value="LOCAL" />
       <updated>1621467227493</updated>
     </task>
-    <option name="localTasksCounter" value="31" />
+    <task id="LOCAL-00031" summary="final2 ty">
+      <created>1621468223429</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1621468223429</updated>
+    </task>
+    <option name="localTasksCounter" value="32" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -550,7 +556,6 @@
   <component name="VcsManagerConfiguration">
     <option name="CHECK_CODE_SMELLS_BEFORE_PROJECT_COMMIT" value="false" />
     <option name="CHECK_NEW_TODO" value="false" />
-    <MESSAGE value="add images to UI" />
     <MESSAGE value="javadoc and code commenting pass" />
     <MESSAGE value="javadoc webpage update" />
     <MESSAGE value="javadoc and code comments update" />
@@ -575,7 +580,8 @@
     <MESSAGE value="final" />
     <MESSAGE value="unassigned assignment 5" />
     <MESSAGE value="final exam" />
-    <option name="LAST_COMMIT_MESSAGE" value="final exam" />
+    <MESSAGE value="final2 ty" />
+    <option name="LAST_COMMIT_MESSAGE" value="final2 ty" />
   </component>
   <component name="XDebuggerManager">
     <pin-to-top-manager>
